@@ -44,6 +44,13 @@ a{color:inherit}
 .muted{color:var(--slate)}
 .small{font-size:13px}
 
+/* search */
+.search{display:flex; gap:8px; margin:0 0 22px}
+.search input{flex:1; min-width:0; font:inherit; font-size:16px; padding:10px 12px; border-radius:12px;
+  border:1px solid var(--faint); background:var(--sheet); color:var(--ink); text-transform:uppercase}
+.search input::placeholder{text-transform:none; color:var(--slate)}
+.search button{font:inherit; font-weight:650; padding:0 16px; border-radius:12px; border:0; background:var(--ink); color:var(--paper); cursor:pointer}
+.visually-hidden{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
 .demo{background:var(--sheet); border:1px dashed var(--slate); border-radius:10px;
       padding:8px 12px; font-size:13px; color:var(--slate); margin-bottom:18px}
 @media (prefers-reduced-motion:no-preference){ details[open] > .fold-body{animation:open .18s ease-out} }
@@ -57,6 +64,7 @@ a{color:inherit}
     <a class="word" href="/">FINN</a>
     <nav aria-label="Main">
       <a href="/" {% if active == 'digest' %}aria-current="page"{% endif %}>Today</a>
+      <a href="/research" {% if active == 'research' %}aria-current="page"{% endif %}>Research</a>
       <a href="/settings" {% if active == 'settings' %}aria-current="page"{% endif %}>Settings</a>
     </nav>
   </header>

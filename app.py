@@ -7,10 +7,12 @@ from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 
 from finn import digest as D
+from finn import research as R
+from finn import screener
 from finn import settings as S
 from finn.cards import METRICS
 from finn.classify import CATEGORIES
-from finn.portfolio import BY_SYMBOL
+from finn.portfolio import BY_SYMBOL, PORTFOLIO
 
 app = FastAPI(title="FINN")
 templates = Jinja2Templates(directory=str(Path(__file__).parent / "templates"))
@@ -115,6 +117,34 @@ def api_digest(window: str = "24h"):
                     "vol_multiple": a.move.vol_multiple and round(a.move.vol_multiple, 2), "kinds": a.kinds}
                    for a in dg.alerts],
     })
+
+
+@app.get("/research", response_class=HTMLResponse)
+def research_search(request: Request, q: str = ""):
+    if not q.strip():
+        return templates.TemplateResponse(request, "research_missing.html", {
+            "active": "research", "q": "", "message": "Which company?", "portfolio": PORTFOLIO})
+    try:
+        t = screener.normalise_ticker(q)
+    except screener.NotFound as e:
+        return templates.TemplateResponse(request, "research_missing.html",
+                                          {"active": "research", "q": q, "message": str(e)}, status_code=400)
+    return RedirectResponse(f"/research/{t}", status_code=303)
+
+
+@app.get("/research/{ticker}", response_class=HTMLResponse)
+def research_page(request: Request, ticker: str):
+    try:
+        data = R.build(ticker)
+    except screener.NotFound as e:
+        return templates.TemplateResponse(request, "research_missing.html",
+                                          {"active": "research", "q": ticker, "message": str(e)}, status_code=404)
+    except Exception as e:      # screener down and no saved copy
+        return templates.TemplateResponse(request, "research_missing.html",
+                                          {"active": "research", "q": ticker,
+                                           "message": f"Couldn't load {ticker.upper()} right now: {str(e)[:120]}. Try again in a minute."},
+                                          status_code=503)
+    return templates.TemplateResponse(request, "research.html", {"active": "research", "r": data})
 
 
 @app.get("/healthz")

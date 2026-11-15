@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Not found · FINN{% endblock %}
+{% block head %}
+<style>
+.msg{font-size:24px; font-weight:740; font-stretch:90%; line-height:1.15; margin:8px 0 8px}
+.hint{color:var(--slate); margin:0 0 20px}
+.chips{display:flex; flex-wrap:wrap; gap:6px}
+.chips a{text-decoration:none; font-stretch:68%; font-weight:750; font-size:15px; padding:6px 11px;
+  border-radius:var(--r-chip); background:var(--sheet); border:1px solid var(--faint)}
+</style>
+{% endblock %}
+{% block body %}
+{% include "search.html" %}
+<p class="msg">{{ message }}</p>
+<p class="hint">{% if portfolio %}Type any NSE symbol, or open one of your stocks. The page reads the last four earnings calls and checks what management promised against reported results.{% else %}Use the NSE symbol, for example KPITTECH, TCS or HDFCBANK.{% endif %}</p>
+{% if portfolio %}<nav class="chips" aria-label="Your stocks">{% for s in portfolio %}<a href="/research/{{ s.symbol }}">{{ s.symbol }}</a>{% endfor %}</nav>{% endif %}
+{% endblock %}

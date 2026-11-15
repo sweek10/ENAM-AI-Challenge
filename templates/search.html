@@ -1,0 +1,6 @@
+<form class="search" action="/research" method="get" role="search">
+  <label for="q" class="visually-hidden">Research a company</label>
+  <input id="q" name="q" type="search" value="{{ q or '' }}" placeholder="NSE ticker, e.g. KPITTECH"
+         autocapitalize="characters" autocomplete="off" spellcheck="false" maxlength="20">
+  <button type="submit">Open</button>
+</form>

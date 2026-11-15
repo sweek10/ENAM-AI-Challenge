@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}{{ r.ticker }} · promised vs delivered · FINN{% endblock %}
+{% block head %}
+<style>
+.who{display:flex; align-items:baseline; gap:10px; margin:0 0 18px}
+.who .tk{font-size:26px}
+.verdict-line{margin:0 0 6px; font-size:30px; line-height:1.08; font-weight:760; font-stretch:88%; letter-spacing:-.01em}
+.sub{margin:0 0 26px; color:var(--slate); font-size:14.5px; max-width:46ch}
+.stale{background:var(--sheet); border:1px dashed var(--slate); border-radius:10px; padding:8px 12px; font-size:13px; color:var(--slate); margin-bottom:16px}
+h2{font-size:15px; font-weight:700; margin:28px 0 10px; display:flex; justify-content:space-between; align-items:baseline}
+h2 span{font-weight:400; font-size:13px; color:var(--slate)}
+
+/* a promise: what was said, what happened, and the call-by-call trail */
+.pr{background:var(--sheet); border-radius:var(--r-sheet); padding:14px; margin-bottom:10px}
+.pr .top{display:flex; align-items:center; gap:8px}
+.pr .what{font-weight:700}
+.pr .per{font-size:12.5px; color:var(--slate)}
+.pill{margin-left:auto; font-size:12.5px; font-weight:650; padding:3px 9px; border-radius:var(--r-chip); white-space:nowrap}
+.v-delivered,.v-on-track{background:color-mix(in srgb, var(--up) 14%, transparent); color:var(--up)}
+.v-missed,.v-behind{background:color-mix(in srgb, var(--down) 14%, transparent); color:var(--down)}
+.v-too-early,.v-unclear{background:color-mix(in srgb, var(--slate) 14%, transparent); color:var(--slate)}
+.pvd{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:12px 0 8px}
+.pvd > div{border-top:1px solid var(--faint); padding-top:6px}
+.pvd .k{font-size:12px; color:var(--slate)}
+.pvd .v{font-size:22px; font-weight:720; font-stretch:92%}
+.pvd .s{font-size:12px; color:var(--slate)}
+.trail{display:flex; flex-wrap:wrap; gap:4px 14px; font-size:13px; margin:2px 0 8px}
+.trail .cut{color:var(--down); font-weight:650}
+.trail .raised{color:var(--up); font-weight:650}
+.how{font-size:12.5px; color:var(--slate); margin:0}
+details.q{margin-top:8px; font-size:13.5px}
+details.q summary{cursor:pointer; color:var(--slate); list-style:none}
+details.q summary::-webkit-details-marker{display:none}
+details.q summary::before{content:"+ "; font-weight:700}
+details.q[open] summary::before{content:"– "}
+blockquote{margin:8px 0 4px; padding:0 0 0 10px; border-left:3px solid var(--mark); line-height:1.45}
+.cite{font-size:12.5px; color:var(--slate)}
+.cite a{color:var(--slate)}
+
+/* quarters */
+.qt{width:100%; border-collapse:collapse; background:var(--sheet); border-radius:var(--r-sheet); font-size:14px; overflow:hidden}
+.qt th{font-weight:500; color:var(--slate); font-size:12px; text-align:right; padding:10px 10px 6px}
+.qt th:first-child,.qt td:first-child{text-align:left}
+.qt td{padding:7px 10px; text-align:right; border-top:1px solid var(--faint)}
+.qt td:first-child{font-weight:600}
+.fold{background:var(--sheet); border-radius:var(--r-sheet); margin-bottom:6px}
+.fold > summary{display:flex; gap:10px; align-items:baseline; padding:11px 14px; cursor:pointer; list-style:none}
+.fold > summary::-webkit-details-marker{display:none}
+.fold > summary .what{color:var(--slate); font-size:13.5px; flex:1}
+.fold-body{padding:0 14px 12px}
+.uc{padding:9px 0; border-top:1px solid var(--faint); font-size:13.5px}
+.uc .n{color:var(--slate); font-size:12.5px}
+footer{margin-top:30px; font-size:12.5px; color:var(--slate); line-height:1.6}
+footer a{color:var(--slate)}
+.empty{background:var(--sheet); border-radius:var(--r-sheet); padding:16px; color:var(--slate)}
+</style>
+{% endblock %}
+{% block body %}
+{% include "search.html" %}
+{% if r.stale %}<p class="stale">{{ r.stale }}</p>{% endif %}
+<div class="who"><span class="tk">{{ r.ticker }}</span><span class="co">{{ r.name }}</span></div>
+
+{% set judged = r.groups|rejectattr('verdict','equalto','unclear')|list %}
+{% set unclear = r.groups|selectattr('verdict','equalto','unclear')|list %}
+{% if r.headline %}
+<p class="verdict-line">{{ r.headline }}</p>
+{% elif r.no_transcripts %}
+<p class="verdict-line">No earnings-call transcripts on file.</p>
+{% else %}
+<p class="verdict-line">No checkable guidance in the last {{ r.calls|length }} calls.</p>
+{% endif %}
+<p class="sub">
+  {% if r.calls %}From the {{ r.calls|length }} most recent earnings calls ({{ r.calls[-1].label }} to {{ r.calls[0].label }}) against reported quarterly results.
+  {{ judged|length }} promise{{ 's' if judged|length != 1 }} checked{% if unclear %}, {{ unclear|length }} couldn't be judged{% endif %}.
+  {% else %}Screener lists no transcripts for this company, so only the results are shown.{% endif %}
+</p>
+
+{% macro pct(v) -%}{% if v is none %}–{% else %}{{ '%.1f'|format(v) }}%{% endif %}{%- endmacro %}
+
+{% if judged %}
+<h2>Promised vs delivered</h2>
+{% for g in judged %}
+<article class="pr">
+  <div class="top"><span class="what">{{ g.label }}</span><span class="per">{{ g.period }}</span>
+    <span class="pill v-{{ g.verdict|replace(' ','-') }}">{{ g.verdict|capitalize }}</span></div>
+  <div class="pvd">
+    <div><div class="k">Promised</div><div class="v">{{ g.target }}</div><div class="s">latest, {{ g.trail[-1].call }}</div></div>
+    <div><div class="k">Delivered</div><div class="v">{{ pct(g.actual) }}</div>
+      <div class="s">{% if g.of %}{{ g.quarters }} of {{ g.of }} quarter{{ 's' if g.of != 1 }} reported{% endif %}</div></div>
+  </div>
+  {% if g.trail|length > 1 %}
+  <div class="trail">{% for t in g.trail %}<span>{{ t.call }}: {{ t.target }}{% if t.change in ('cut','raised') %} <span class="{{ t.change }}">{{ t.change }}</span>{% endif %}</span>{% endfor %}</div>
+  {% endif %}
+  {% if g.note %}<p class="how">{{ g.note }}</p>{% endif %}
+  {% if g.how %}<p class="how">Actual: {{ g.how }}.</p>{% endif %}
+  <details class="q"><summary>What they said</summary>
+    {% set ns = namespace(seen=[]) %}
+    {% for t in g.trail|reverse %}{% if t.quote not in ns.seen %}{% set ns.seen = ns.seen + [t.quote] %}
+    {% set same = g.trail|selectattr('quote','equalto',t.quote)|map(attribute='call')|list %}
+    <blockquote>{{ t.quote }}</blockquote>
+    <div class="cite">{{ t.speaker }}, {{ same|reverse|join(', ') }} call{{ 's' if same|length > 1 }} · <a href="{{ t.source }}" target="_blank" rel="noopener">transcript</a></div>
+    {% endif %}{% endfor %}
+  </details>
+</article>
+{% endfor %}
+{% endif %}
+
+{% if unclear %}
+<details class="fold" style="margin-top:14px">
+  <summary><span class="what">Other numbers management gave that the code can't check against results</span><span class="co">{{ unclear|length }}</span></summary>
+  <div class="fold-body">
+    {% for g in unclear %}
+    <div class="uc"><strong>{{ g.label }}{% if g.period %}, {{ g.period }}{% endif %}: {{ g.target }}</strong>
+      <span class="pill v-unclear" style="margin-left:6px">Unclear</span>
+      <div class="n">{{ g.note }}{% if g.actual is not none %} Rupee figure: {{ pct(g.actual) }}.{% endif %}</div>
+      <blockquote>{{ g.trail[-1].quote }}</blockquote>
+      <div class="cite">{{ g.trail[-1].speaker }}, {{ g.trail[-1].call }} call · <a href="{{ g.trail[-1].source }}" target="_blank" rel="noopener">transcript</a></div>
+    </div>
+    {% endfor %}
+  </div>
+</details>
+{% endif %}
+
+{% if r.quarters %}
+<h2>Last {{ r.quarters|length }} quarters <span>₹ crore</span></h2>
+<table class="qt">
+  <thead><tr><th>Quarter</th><th>Sales</th><th>YoY</th><th>Op. margin</th><th>Net profit</th></tr></thead>
+  <tbody>
+  {% for q in r.quarters|reverse %}
+  <tr><td>{{ q.q }}</td><td>{{ money(q.sales) if q.sales is not none else '–' }}</td>
+    <td class="{{ tone(q.yoy) if q.yoy is not none else 'flat' }}">{{ pct(q.yoy) }}</td>
+    <td>{{ pct(q.opm) }}</td><td>{{ money(q.pat) if q.pat is not none else '–' }}</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endif %}
+
+<footer>
+  Sources: {% for c in r.calls %}<a href="{{ c.url }}" target="_blank" rel="noopener">{{ c.label }} transcript</a>{{ ', ' if not loop.last }}{% endfor %}{% if r.calls %}, {% endif %}<a href="{{ r.screener_url }}" target="_blank" rel="noopener">quarterly results on screener.in</a>.
+  Guidance is found by rules: a management sentence that looks forward and gives a number. Verdicts allow {{ '0.5' }} points of slack.
+  {% for p in r.problems %}<br>Skipped {{ p }}.{% endfor %}
+  <br>Built {{ r.built_at[:16]|replace('T',' ') }}.
+</footer>
+{% endblock %}

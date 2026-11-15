@@ -12,3 +12,4 @@ pypdfium2
 pillow
 reportlab
 pdfplumber
+beautifulsoup4
