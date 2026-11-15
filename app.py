@@ -85,11 +85,16 @@ def home(request: Request, window: str | None = None):
     auto_from = None
     if window in D.WINDOWS:
         dg = D.build(window, st)
-    else:   # no choice made: open on the shortest window that has filings, and say so
+    else:   # no choice made: open on the shortest window where something needs you (else any filings), and say so
+        first_with_filings = None
         for w in D.WINDOWS:
             dg = D.build(w, st)
-            if dg.total:
+            if dg.need_you:
                 break
+            if dg.total and first_with_filings is None:
+                first_with_filings = dg
+        else:
+            dg = first_with_filings or dg
         auto_from = "24h" if dg.window != "24h" and dg.total else None
     return templates.TemplateResponse(request, "digest.html",
                                       {"d": dg, "s": st, "windows": list(D.WINDOWS), "auto_from": auto_from})

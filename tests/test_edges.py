@@ -44,9 +44,9 @@ def test_digest_opens_on_shortest_window_with_filings(client):
         c.execute("INSERT INTO announcements VALUES (?,?,?,?,?,?,?,?)",
                   ("e1", "TCS", t, "Unaudited Financial Results for the quarter", "Result", "", "", "bse"))
     html = client.get("/").text
-    assert "Nothing filed in the last 24 hours, so this shows the last 3 days" in html
+    assert "Nothing in the last 24 hours needed you, so this shows the last 3 days" in html
     assert 'href="/?window=3d" aria-current' in html
-    assert "Nothing filed" not in client.get("/?window=24h").text          # explicit choice is respected
+    assert "needed you, so this shows" not in client.get("/?window=24h").text   # explicit choice is respected
 
 
 @pytest.mark.parametrize("form,kept", [
