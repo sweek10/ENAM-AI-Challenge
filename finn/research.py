@@ -12,7 +12,7 @@ from . import cache, config, guidance, pdfs, screener
 from .guidance import Guidance
 
 log = logging.getLogger(__name__)
-GUIDANCE_VERSION = "g2"   # bump whenever finn/guidance.py rules change
+GUIDANCE_VERSION = "g4"   # bump whenever finn/guidance.py rules change
 CALLS = 4
 TOL = 0.5                 # percentage points of slack before calling a miss
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
@@ -132,6 +132,10 @@ def judge(g: Guidance, act: Actuals) -> dict:
         return {**res, "verdict": "unclear",
                 "note": "Guided in constant currency or dollars; filings report rupees, so the rupee figure is shown for context only."}
     lo, hi = g.low, g.high
+    if g.metric == "margin" and abs(val - ((lo + hi) / 2 if hi is not None else lo)) > 3:
+        return {**res, "verdict": "unclear",
+                "note": "Guided margin is more than 3 points from the reported operating margin, so it's probably a segment "
+                        "or a different measure."}
     slack = 1.0 if (g.metric == "margin" and lo == hi) else TOL
     ok = val >= lo - slack
     final = len(have) == len(qs)

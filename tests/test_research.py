@@ -20,8 +20,9 @@ def text_pdf(path, text):
     from reportlab.pdfgen import canvas
     c = canvas.Canvas(str(path), pagesize=A4)
     y = 800
+    import textwrap
     for ln in text.splitlines():
-        for chunk in [ln[i:i + 95] for i in range(0, max(len(ln), 1), 95)] or [""]:
+        for chunk in textwrap.wrap(ln, 95) or [""]:
             c.drawString(30, y, chunk)
             y -= 14
             if y < 40:
@@ -192,3 +193,26 @@ def test_viewer_links_resolve_to_pdf():
          "company-reports%2F2026-2027%2FTranscript_earnings_call_Maruti_Suzuki_Q2_FY_27.pdf")
     assert screener.direct_pdf(u) == ("https://www.marutisuzuki.com/content/dam/arena-eds/corporate/pdf/"
                                      "company-reports/2026-2027/Transcript_earnings_call_Maruti_Suzuki_Q2_FY_27.pdf")
+
+
+@pytest.mark.parametrize("sentence", [
+    "Consensus was a system credit growth of around 10.5% to 11.5% for FY26.",
+    "We expect AUM growth of 22% to 23% for FY27.",
+    "We remain confident of our order inflow growth guidance of 10% to 12% for the current year.",
+    "The EBITDA margin in the Projects & Manufacturing portfolio for Q3 FY26 is at 8.1%.",
+    "We expect the domestic segment margin to be 18% next year.",
+    "We are taking a target of 12% to 15% revenue CAGR over the plan period.",
+    "On the revenue front, growth for FY26 stood at 12% compared to our guidance of 15%."])
+def test_not_company_level_never_judged(sentence):
+    """Real false positives from HDFC Bank, Bajaj Finance and L&T calls: never compared with company totals."""
+    text = f"MANAGEMENT: MR. A B\nModerator: Welcome.\nA B: {sentence} " + "We will keep investing. " * 30
+    assert all(g.metric == "other" for g in G.extract(text, "Aug 2026", "u"))
+
+
+def test_margin_far_from_reported_is_unclear():
+    act = R.Actuals(kpit())
+    assert R.judge(g("margin", 8.5, 8.5, "FY26"), act)["verdict"] == "unclear"     # reported ~18.9%
+
+
+def test_beyond_fy_is_not_that_year():
+    assert G.period_of("Beyond FY25, we will be improving margins to 12%", 2026) is None

@@ -24,7 +24,7 @@ ROWS = {
     "finance_costs": re.compile(r"finance\s+costs?", re.I),
     "depreciation": re.compile(r"depreciation", re.I),
     "pbt": re.compile(r"^(net\s+)?profit\s*(/\s*\(?loss\)?\s*)?before\s+tax", re.I),
-    "pat": re.compile(r"^(net\s+)?profit\s*(/\s*\(?loss\)?\s*)?for\s+the\s+(period|quarter|year)", re.I),
+    "pat": re.compile(r"^(net\s+)?profit\s*(/\s*\(?loss\)?\s*)?(for\s+the\s+(period|quarter|year)|after\s+tax)", re.I),
 }
 LABEL_PREFIX = re.compile(r"^(\(?[a-hj-z]\)|\(?[ivx]{1,4}\)|[ivx]{1,4}\.|\d{1,2}[.)]?|[A-H]\s)\s*", re.I)
 
@@ -168,8 +168,8 @@ def parse_page(page) -> Parsed:
     for l in lines:
         lbl = " ".join(w["text"] for w in l if not is_num_token(w["text"]))
         if re.search(r"revenue\s+from\s+operations", lbl, re.I):
-            label_right = max(w["x1"] for w in l if not is_num_token(w["text"]) and
-                              w["x0"] < page.width * 0.6)
+            label_right = max((w["x1"] for w in l if not is_num_token(w["text"]) and
+                               w["x0"] < page.width * 0.6), default=0.0)
             break
     cols = _columns(lines, label_right)
     notes: list[str] = []
@@ -241,7 +241,7 @@ def parse_page(page) -> Parsed:
         candidates = [label, (prev_label + " " + label).strip()]
         prev_label = ""
         for key, pat in ROWS.items():
-            if key in rows:
+            if key in rows and not (key == "pat" and re.search(r"including\s+share|after\s+share", " ".join(candidates), re.I)):
                 continue
             hit = next((c for c in candidates if pat.search(c)), None)
             if not hit:
@@ -266,8 +266,13 @@ def find_and_parse(pdf_path, candidate_pages: list[int]) -> tuple[Parsed | None,
         for i in candidate_pages:
             if i >= len(pdf.pages):
                 continue
-            p = parse_page(pdf.pages[i])
-            if "revenue" not in p.rows and "pbt" not in p.rows:
+            try:
+                p = parse_page(pdf.pages[i])
+            except Exception:          # one odd page (rotated, two-up) must not sink the whole card
+                continue
+            # A statement page has revenue and a profit line and most of the rest; a highlights page
+            # with one stray "revenue" figure must not qualify (it produced a wrong number once).
+            if "revenue" not in p.rows or not ({"pbt", "pat"} & set(p.rows)) or len(p.rows) < 4:
                 continue
             score = len(p.rows) + (3 if p.statement == "consolidated" else 0)
             if best is None or score > best[0]:

@@ -83,6 +83,10 @@ def build_results(vals: dict[str, dict[str, float | None]], labels: dict[str, st
     for c in COLS:
         parts = [get("pbt", c), get("finance_costs", c), get("depreciation", c), get("other_income", c)]
         e[c] = None if any(p is None for p in parts) else round(parts[0] + parts[1] + parts[2] - parts[3], 2)
+    fin, rev = get("finance_costs", "current"), get("revenue", "current")
+    if fin is not None and rev and fin > 0.3 * rev:      # a lender: interest is its main cost, EBITDA means nothing
+        e = {c: None for c in COLS}
+        notes = list(notes or []) + ["EBITDA isn't meaningful for a lender, so it isn't shown."]
     metrics["ebitda"] = Metric("EBITDA", **e, derived=True, label="PBT + finance costs + depreciation − other income")
 
     for m in metrics.values():

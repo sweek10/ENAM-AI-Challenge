@@ -15,7 +15,7 @@ from .announcements import Announcement
 
 log = logging.getLogger(__name__)
 RETRY_ERRORS_AFTER = 6 * 3600
-PARSER_VERSION = "p2"     # bump to re-parse stored filings after a parser change
+PARSER_VERSION = "p5"     # bump to re-parse stored filings after a parser change
 
 
 def get(ids: list[str], kind: str) -> dict[str, dict]:

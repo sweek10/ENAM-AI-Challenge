@@ -15,7 +15,8 @@ FWD = re.compile(
     r"going forward|next (?:year|fiscal|quarter|two quarters)|in the (?:coming|next) (?:year|quarters?)|"
     r"we are confident|we remain confident|confident of|plan(?:ning)? to|estimate\w*)\b", re.I)
 STRONG_FWD = re.compile(r"\b(guid\w*|expect\w*|target\w*|aspir\w*|outlook|anticipat\w*)\b", re.I)
-BACKWARD = re.compile(r"\b(achieved|stood at|came in at|came at|registering|registered|translat\w+ (?:to|into)|reported|"
+BACKWARD = re.compile(r"\b(achieved|stood at|came in at|came at|is at|was at|improved from|moved from|had guided|"
+                      r"registering|registered|translat\w+ (?:to|into)|reported|"
                       r"we delivered|we grew|we have grown|was up|were up|declined|recorded|improvement of|"
                       r"quarter gone by|year gone by|for the quarter|this quarter|last quarter|in the quarter)\b", re.I)
 
@@ -35,9 +36,16 @@ METRICS = [
     ("margin", re.compile(r"\b(ebitda|ebit|operating)\s+margin|\bmargins?\b|\bopm\b|\bebitda\b", re.I)),
     ("capex", re.compile(r"\bcapex\b|capital expenditure", re.I)),
     ("profit_growth", re.compile(r"\b(pat|net profit|profit after tax|bottom[- ]?line|earnings)\b.{0,40}\b(grow|growth)", re.I)),
-    ("revenue_growth", re.compile(r"\b(revenue|top[- ]?line|sales|turnover|business)\b.{0,60}\b(grow\w*|growth|increase)|"
-                                  r"\b(grow\w*|growth)\b.{0,40}\b(revenue|top[- ]?line|sales)\b|\bgrow\w*\b", re.I)),
+    ("revenue_growth", re.compile(r"\b(revenue|top[- ]?line|sales|turnover)\b.{0,60}\b(grow\w*|growth|increase)|"
+                                  r"\b(grow\w*|growth)\b.{0,40}\b(revenue|top[- ]?line|sales|turnover)\b", re.I)),
 ]
+# Numbers about something other than the company's own revenue or overall margin. Comparing these with
+# reported revenue or operating margin gave wrong verdicts (loan-book growth, order inflow, one segment's margin).
+NOT_COMPANY_LEVEL = re.compile(
+    r"\b(aum|assets under management|loan|loans|advances|deposits?|credit|book|orders?|order inflow|inflows?|backlog|"
+    r"pipeline|volumes?|industry|market|system|gdp|segment|portfolio|vertical|division|geograph\w*|region\w*|"
+    r"exports?|domestic|ppm|p&m|eps|dividend|roe|roa|roce|nim|cost of funds|tax rate|etr|attrition|"
+    r"utili[sz]ation|headcount|capacity|deal|wins|subsidiar\w*|businesses|this business|that business|cagr)\b", re.I)
 EBIT_ONLY = re.compile(r"\bebit\b(?!da)", re.I)
 CC = re.compile(r"constant currency|\bcc\b|in dollar terms|dollar revenue|usd revenue|\$ revenue|in usd", re.I)
 
@@ -129,6 +137,8 @@ def fiscal_year(call_label: str) -> int | None:
 
 def period_of(sentence: str, fy: int | None) -> str | None:
     s = sentence.lower()
+    if re.search(r"\b(beyond|after|post|from)\s+fy\s?'?\d{2,4}", s):
+        return None                 # "beyond FY25" is not FY25
     m = re.search(r"\b(q[1-4])\s*(?:of\s*)?fy\s?'?(\d{2,4})\b", s)
     if m:
         return f"{m[1].upper()}FY{m[2][-2:]}"
@@ -195,10 +205,14 @@ def extract(text: str, call: str, source: str, per_call: int = 8) -> list[Guidan
                 continue
             if BACKWARD.search(sent) and not STRONG_FWD.search(sent):
                 continue
+            if BACKWARD.search(sent) and len(re.findall(r"\d+(?:\.\d+)?\s*%", sent)) >= 2:
+                continue            # "stood at 12% against guidance of 15%": actual and target mixed, skip
             lo, hi, unit = target_of(sent)
             if lo is None:
                 continue
             metric = metric_of(sent)
+            if metric in ("revenue_growth", "margin", "profit_growth") and NOT_COMPANY_LEVEL.search(sent):
+                metric = "other"            # still shown, as unclear, but never judged against company totals
             if unit != "%" and metric != "capex":
                 continue            # deal sizes, financing amounts: not checkable guidance
             if metric == "other" and not STRONG_FWD.search(sent):
