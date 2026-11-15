@@ -12,7 +12,7 @@ from . import cache, config, guidance, pdfs, screener
 from .guidance import Guidance
 
 log = logging.getLogger(__name__)
-GUIDANCE_VERSION = "g1"
+GUIDANCE_VERSION = "g2"   # bump whenever finn/guidance.py rules change
 CALLS = 4
 TOL = 0.5                 # percentage points of slack before calling a miss
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
