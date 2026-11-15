@@ -155,7 +155,7 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
       </tbody>
     </table>
     {% for w in rc.checks %}<p class="warn">{{ w }}</p>{% endfor %}
-    <p class="src">{{ (rc.statement or '')|capitalize }} statement{% if rc.page %}, <a href="{{ i.a.pdf_url }}#page={{ rc.page }}" target="_blank" rel="noopener">page {{ rc.page }} of the filing</a>{% endif %}. <sup>*</sup>EBITDA isn't printed in the filing: it's PBT + finance costs + depreciation − other income. Read by {{ model_name(rc.model) }}.</p>
+    <p class="src">{{ (rc.statement or '')|capitalize }} statement{% if rc.page %}, <a href="{{ i.a.pdf_url }}#page={{ rc.page }}" target="_blank" rel="noopener">page {{ rc.page }} of the filing</a>{% endif %}. <sup>*</sup>Derived: PBT + finance costs + depreciation − other income.</p>
     {% endif %}
   {% endif %}
   {% if i.mgmt %}{% set mc = i.mgmt %}{% set p = mc.lead %}
@@ -230,8 +230,7 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
 
 <footer>
   {% set st = d.stats %}
-  Sorted {{ st['rule:headline'] + st['rule:exchange_cat'] }} of {{ d.total }} by rules{% if st['pdf:page1'] %}, {{ st['pdf:page1'] }} by reading the filing's first page{% endif %}{% if st['llm'] or st['llm_cache'] %}, {{ st['llm'] + st['llm_cache'] }} by {{ st['models']|map('model_name')|join(' and ') if st['models'] else 'an LLM' }}{% endif %}{% if st['no_llm'] %}, {{ st['no_llm'] }} unreviewed{% endif %}.
-  {% if st['cost_usd'] %}This view cost ${{ '%.5f'|format(st['cost_usd']) }}.{% endif %}
+  Sorted {{ st['rule:headline'] + st['rule:exchange_cat'] }} of {{ d.total }} by rules{% if st['pdf:page1'] %}, {{ st['pdf:page1'] }} by reading the filing's first page{% endif %}{% if st['unreviewed'] %}, {{ st['unreviewed'] }} unreviewed{% endif %}.
   Prices are end of day{% if d.moves %}, last close {{ (d.moves.values()|list)[0].date }}{% endif %}.
   {% if d.source == 'snapshot' %}Filings from saved snapshot.{% endif %}
 </footer>

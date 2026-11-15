@@ -8,7 +8,6 @@ from fastapi.templating import Jinja2Templates
 
 from finn import digest as D
 from finn import settings as S
-from finn import config
 from finn.cards import METRICS
 from finn.classify import CATEGORIES
 from finn.portfolio import BY_SYMBOL
@@ -74,9 +73,8 @@ def tone(x: float) -> str:
     return "flat" if abs(x) < 0.05 else ("up" if x > 0 else "down")
 
 
-templates.env.filters["model_name"] = config.model_name
 templates.env.globals.update(money=money, linkedin_search=linkedin_search, METRICS=METRICS,
-                             model_name=config.model_name, pct=pct, tone=tone, ago=ago, spark=spark, BY_SYMBOL=BY_SYMBOL, LABELS=D.LABELS)
+                             pct=pct, tone=tone, ago=ago, spark=spark, BY_SYMBOL=BY_SYMBOL, LABELS=D.LABELS)
 
 
 @app.get("/", response_class=HTMLResponse)

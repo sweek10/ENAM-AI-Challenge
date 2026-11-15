@@ -1,8 +1,9 @@
-"""The brief's two special cards, plus page-1 classification of vague filings.
+"""The brief's two special cards, plus page-1 classification of vague filings. No LLM.
 
 Principles:
-  * The model copies what is printed; code does all arithmetic (EBITDA, QoQ, YoY).
-  * Anything not printed is None and renders as "not found". No guessing.
+  * Numbers come straight from the filing's text layer, located by row label and
+    by the date printed above each column; code does all arithmetic.
+  * Anything not found is None and renders as "not found". No guessing.
   * Every card records the source page so the UI can link straight to it.
   * Cross-checks (total income = revenue + other income) flag misreads.
 """
@@ -10,27 +11,11 @@ import re
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from . import classify, config, llm, pdfs
+from . import classify, mgmt, pdfs, statement
 from .announcements import Announcement
+from .mgmt import Person
 
-# ---------- number parsing ----------
-
-def parse_num(s) -> float | None:
-    """'1,45,463' -> 145463 ; '(1,234.5)' -> -1234.5 ; '-' / '' / None -> None."""
-    if s is None:
-        return None
-    if isinstance(s, (int, float)):
-        return float(s)
-    t = str(s).strip().replace("−", "-").replace("₹", "").replace(" ", "")
-    if t in ("", "-", "–", "—", "nil", "Nil", "NIL", "N.A.", "NA"):
-        return None
-    neg = t.startswith("(") and t.endswith(")")
-    t = t.strip("()").replace(",", "")
-    try:
-        v = float(t)
-    except ValueError:
-        return None
-    return -v if neg else v
+PARSER = "text parser"
 
 
 def pct_change(cur, base) -> float | None:
@@ -41,33 +26,9 @@ def pct_change(cur, base) -> float | None:
 
 # ---------- results card ----------
 
-RESULTS_SYSTEM = """You read quarterly financial results statements filed by Indian listed companies (SEBI format).
-Rules:
-- Copy every number exactly as printed, as a string, including commas and brackets. Never compute, round, estimate or infer.
-- If a line is not printed in the statement, use null. Do not substitute a different line.
-- Prefer the CONSOLIDATED statement if one is shown; otherwise use STANDALONE.
-- Columns: "current" = quarter just ended; "prev_q" = the immediately preceding quarter; "yoy_q" = the same quarter a year earlier. Ignore half-year and full-year columns.
-Reply with JSON only."""
-
-RESULTS_SCHEMA = """{
- "found_statement": true|false,
- "statement": "consolidated"|"standalone",
- "unit": "as printed, e.g. ₹ crore / ₹ lakh / ₹ million",
- "page": <page number where the statement is printed>,
- "periods": {"current": "...", "prev_q": "...", "yoy_q": "..."},
- "rows": {
-   "revenue":        {"label": "exact row label, normally Revenue from operations", "current": "...", "prev_q": "...", "yoy_q": "..."},
-   "other_income":   {...same keys...},
-   "total_income":   {...},
-   "finance_costs":  {...},
-   "depreciation":   {"label": "Depreciation and amortisation expense", ...},
-   "pbt":            {"label": "Profit before tax (after exceptional items)", ...},
-   "pat":            {"label": "Profit for the period", ...}
- }
-}"""
-
 METRICS = ["revenue", "ebitda", "pbt", "pat"]
 METRIC_NAMES = {"revenue": "Revenue", "ebitda": "EBITDA", "pbt": "PBT", "pat": "PAT"}
+COLS = ("current", "prev_q", "yoy_q")
 
 
 @dataclass
@@ -90,9 +51,8 @@ class ResultsCard:
     periods: dict
     metrics: dict[str, Metric]
     checks: list[str] = field(default_factory=list)   # human-readable warnings
-    status: str = "ok"                                 # ok | partial | not_found | error
-    model: str = ""
-    cost_usd: float = 0.0
+    status: str = "ok"                                 # ok | partial | not_found
+    method: str = PARSER
 
     def to_json(self) -> dict:
         d = asdict(self)
@@ -101,9 +61,52 @@ class ResultsCard:
 
     @staticmethod
     def from_json(d: dict) -> "ResultsCard":
-        d = dict(d)
+        d = {k: v for k, v in d.items() if k in ResultsCard.__dataclass_fields__}
         d["metrics"] = {k: Metric(**v) for k, v in d["metrics"].items()}
         return ResultsCard(**d)
+
+
+def not_found(reason: str) -> ResultsCard:
+    return ResultsCard(None, None, None, {}, {m: Metric(METRIC_NAMES[m]) for m in METRICS}, [reason], "not_found")
+
+
+def build_results(vals: dict[str, dict[str, float | None]], labels: dict[str, str], *, statement_kind=None,
+                  unit=None, page=None, periods=None, notes=None) -> ResultsCard:
+    """vals: row -> {current, prev_q, yoy_q} as printed. All arithmetic happens here."""
+    get = lambda r, c: (vals.get(r) or {}).get(c)
+    metrics: dict[str, Metric] = {}
+    for k in ("revenue", "pbt", "pat"):
+        metrics[k] = Metric(METRIC_NAMES[k], **{c: get(k, c) for c in COLS}, label=labels.get(k, ""))
+
+    # EBITDA is not a statutory line: derive it, and only if every input was printed.
+    e = {}
+    for c in COLS:
+        parts = [get("pbt", c), get("finance_costs", c), get("depreciation", c), get("other_income", c)]
+        e[c] = None if any(p is None for p in parts) else round(parts[0] + parts[1] + parts[2] - parts[3], 2)
+    metrics["ebitda"] = Metric("EBITDA", **e, derived=True, label="PBT + finance costs + depreciation − other income")
+
+    for m in metrics.values():
+        m.qoq_pct = pct_change(m.current, m.prev_q)
+        m.yoy_pct = pct_change(m.current, m.yoy_q)
+    metrics = {k: metrics[k] for k in METRICS}
+
+    checks = list(notes or [])
+    names = {"current": "this quarter", "prev_q": "previous quarter", "yoy_q": "year-ago quarter"}
+    for c in COLS:
+        r, o, t = get("revenue", c), get("other_income", c), get("total_income", c)
+        if None not in (r, o, t) and t and abs((r + o) - t) / abs(t) > 0.01:
+            checks.append(f"Revenue + other income ≠ total income for the {names[c]}; verify against the filing.")
+        p, b = get("pat", c), get("pbt", c)
+        if None not in (p, b) and b > 0 and p > b * 1.5:
+            checks.append(f"PAT is well above PBT for the {names[c]}; possible misread.")
+    if get("revenue", "current") is not None and get("revenue", "current") <= 0:
+        checks.append("Revenue is not positive; possible misread.")
+
+    if all(m.current is None for m in metrics.values()):
+        return not_found("No results figures found in the filing's text.")
+    missing = [m for m in metrics.values() if m.current is None]
+    status = "ok" if not missing and not checks else "partial"
+    return ResultsCard(statement_kind, unit, page, periods or {}, metrics, checks, status)
 
 
 _STATEMENT_HINTS = [
@@ -126,110 +129,33 @@ def pick_statement_pages(texts: list[str]) -> list[int]:
     return [i for _, i in scored[:2]]
 
 
-def build_results(data: dict | None) -> ResultsCard:
-    """Turn the model's verbatim copy into a card. All arithmetic happens here."""
-    if not data or not data.get("found_statement"):
-        return ResultsCard(None, None, None, {}, {m: Metric(METRIC_NAMES[m]) for m in METRICS},
-                           ["No results statement found in the pages read."], "not_found")
-    rows = data.get("rows") or {}
-    vals = {k: {c: parse_num((rows.get(k) or {}).get(c)) for c in ("current", "prev_q", "yoy_q")} for k in
-            ("revenue", "other_income", "total_income", "finance_costs", "depreciation", "pbt", "pat")}
-    labels = {k: (rows.get(k) or {}).get("label") or "" for k in vals}
-
-    metrics: dict[str, Metric] = {}
-    for k in ("revenue", "pbt", "pat"):
-        metrics[k] = Metric(METRIC_NAMES[k], **vals[k], label=labels[k])
-
-    # EBITDA is not a statutory line: derive it, and only if every input was printed.
-    e = {}
-    for c in ("current", "prev_q", "yoy_q"):
-        parts = [vals["pbt"][c], vals["finance_costs"][c], vals["depreciation"][c], vals["other_income"][c]]
-        e[c] = None if any(p is None for p in parts) else parts[0] + parts[1] + parts[2] - parts[3]
-    metrics["ebitda"] = Metric("EBITDA", **e, derived=True,
-                               label="PBT + finance costs + depreciation − other income")
-
-    for m in metrics.values():
-        m.qoq_pct = pct_change(m.current, m.prev_q)
-        m.yoy_pct = pct_change(m.current, m.yoy_q)
-    metrics = {k: metrics[k] for k in METRICS}
-
-    checks = []
-    for c in ("current", "prev_q", "yoy_q"):
-        r, o, t = vals["revenue"][c], vals["other_income"][c], vals["total_income"][c]
-        if None not in (r, o, t) and t and abs((r + o) - t) / abs(t) > 0.01:
-            checks.append(f"Revenue + other income ≠ total income in the {c.replace('_', ' ')} column; verify against the filing.")
-        p, b = vals["pat"][c], vals["pbt"][c]
-        if None not in (p, b) and b > 0 and p > b * 1.5:
-            checks.append(f"PAT is well above PBT in the {c.replace('_', ' ')} column; possible misread.")
-    if vals["revenue"]["current"] is not None and vals["revenue"]["current"] <= 0:
-        checks.append("Revenue is not positive; possible misread.")
-
-    missing = [m for m in metrics.values() if m.current is None]
-    status = "ok" if not missing and not checks else "partial"
-    return ResultsCard(data.get("statement"), data.get("unit"), data.get("page"), data.get("periods") or {},
-                       metrics, checks, status)
-
-
-def extract_results(pdf: Path, client, max_scan_pages: int = 6) -> tuple[ResultsCard, dict]:
-    texts = pdfs.page_texts(pdf, 30)
-    n = pdfs.num_pages(pdf)
-    if pdfs.is_scanned(texts[:max_scan_pages]):
-        pages, how = list(range(min(n, max_scan_pages))), "scanned: first pages as images"
-    else:
-        pages = pick_statement_pages(texts)
-        how = "text layer: picked statement page(s)"
-        if not pages:
-            card = build_results(None)
-            card.checks = ["Text layer has no results statement (searched all pages)."]
-            return card, {"pages": [], "how": how}
-        pages = sorted(set(pages + [p + 1 for p in pages if p + 1 < n]))[:3]
-    content = []
-    for p in pages:
-        content.append(llm.text_block(f"Page {p + 1}:"))
-        content.append(llm.image_block(pdfs.render(pdf, p, dpi=110 if len(pages) <= 3 else 90)))
-    content.append(llm.text_block("Extract the quarterly results into exactly this JSON shape:\n" + RESULTS_SCHEMA))
-    data, usage, c = llm.call_json(client, config.EXTRACT_MODEL, RESULTS_SYSTEM, content, 1500, "results_card")
-    card = build_results(data)
-    card.model, card.cost_usd = config.EXTRACT_MODEL, c
-    return card, {"pages": [p + 1 for p in pages], "how": how, "usage": usage}
+def extract_results(pdf: Path) -> tuple[ResultsCard, dict]:
+    texts = pdfs.page_texts(pdf, 40)
+    if pdfs.is_scanned(texts[:6]):
+        return not_found("This filing is an image without a text layer, so the figures can't be read."), \
+            {"how": "scanned, no text"}
+    # candidates: best-scoring pages plus any page that mentions revenue from operations
+    cands = pick_statement_pages(texts) + [i for i, t in enumerate(texts) if re.search(r"revenue\s+from\s+operations", t, re.I)]
+    cands = list(dict.fromkeys(cands))[:12]
+    parsed, page = statement.find_and_parse(pdf, cands)
+    if parsed is None:
+        return not_found("No results statement found in the filing's text."), {"how": "text layer", "pages": [c + 1 for c in cands]}
+    vals = {k: {c: (cell.value if cell else None) for c, cell in row.items()} for k, row in parsed.rows.items()}
+    card = build_results(vals, parsed.labels, statement_kind=parsed.statement, unit=parsed.unit, page=page,
+                         periods=parsed.periods, notes=parsed.notes)
+    return card, {"how": "text layer, positions", "pages": [page]}
 
 
 # ---------- management change card ----------
-
-MGMT_SYSTEM = """You read Indian stock-exchange disclosures about changes in directors and key managerial personnel.
-Rules:
-- Use ONLY what the filing says. Do not add anything you know about the person from elsewhere.
-- background: at most two short sentences, taken from the filing's brief profile (education, prior roles, experience). null if the filing gives no profile.
-- If a field is not stated, use null.
-Reply with JSON only."""
-
-MGMT_SCHEMA = """{"changes": [
-  {"name": "...", "role": "designation as stated", "change": "appointed"|"resigned"|"retired"|"re-appointed"|"ceased"|"other",
-   "effective": "date as stated or null", "background": "... or null", "prior_roles": ["...", "..."],
-   "reason": "stated reason (for resignations) or null", "page": <page number>}
-]}"""
 
 _TOP = re.compile(r"\b(ceo|cfo|coo|md)\b|chief|managing director|chair|whole[- ]?time|executive director", re.I)
 
 
 @dataclass
-class Person:
-    name: str
-    role: str | None
-    change: str | None
-    effective: str | None
-    background: str | None
-    prior_roles: list[str]
-    reason: str | None
-    page: int | None
-
-
-@dataclass
 class MgmtCard:
     people: list[Person]
-    status: str = "ok"            # ok | not_found | error
-    model: str = ""
-    cost_usd: float = 0.0
+    status: str = "ok"            # ok | not_found
+    method: str = PARSER
     note: str = ""
 
     @property
@@ -245,46 +171,25 @@ class MgmtCard:
 
     @staticmethod
     def from_json(d: dict) -> "MgmtCard":
-        d = dict(d)
-        d["people"] = [Person(**p) for p in d["people"]]
+        d = {k: v for k, v in d.items() if k in MgmtCard.__dataclass_fields__}
+        d["people"] = [Person(**{k: v for k, v in p.items() if k in Person.__dataclass_fields__}) for p in d["people"]]
         return MgmtCard(**d)
 
 
-def build_mgmt(data: dict | None) -> MgmtCard:
-    rows = (data or {}).get("changes") or []
-    people = []
-    for r in rows:
-        if not r.get("name"):
-            continue
-        people.append(Person(r.get("name"), r.get("role"), r.get("change"), r.get("effective"),
-                             r.get("background"), [x for x in (r.get("prior_roles") or []) if x][:4],
-                             r.get("reason"), r.get("page")))
-    return MgmtCard(people, "ok" if people else "not_found",
-                    note="" if people else "No named person found in the filing.")
-
-
-def extract_mgmt(pdf: Path, client, max_pages: int = 3) -> tuple[MgmtCard, dict]:
+def extract_mgmt(pdf: Path, max_pages: int = 8) -> tuple[MgmtCard, dict]:
     texts = pdfs.page_texts(pdf, max_pages)
-    n = min(pdfs.num_pages(pdf), max_pages)
-    if pdfs.is_scanned(texts):
-        content = []
-        for p in range(n):
-            content += [llm.text_block(f"Page {p + 1}:"), llm.image_block(pdfs.render(pdf, p, dpi=100))]
-        how = "scanned: page images"
-    else:   # text is far cheaper than images for a letter
-        content = [llm.text_block("\n\n".join(f"--- Page {i + 1} ---\n{t[:6000]}" for i, t in enumerate(texts[:n])))]
-        how = "text layer"
-    content.append(llm.text_block("List every change in this exact JSON shape:\n" + MGMT_SCHEMA))
-    data, usage, c = llm.call_json(client, config.EXTRACT_MODEL, MGMT_SYSTEM, content, 900, "mgmt_card")
-    card = build_mgmt(data)
-    card.model, card.cost_usd = config.EXTRACT_MODEL, c
-    return card, {"how": how, "usage": usage}
+    if pdfs.is_scanned(texts[:3]):
+        return MgmtCard([], "not_found", note="This filing is an image without a text layer."), {"how": "scanned"}
+    people = mgmt.parse(texts)
+    card = MgmtCard(people, "ok" if people else "not_found",
+                    note="" if people else "No named person found in the filing's text.")
+    return card, {"how": "text layer"}
 
 
 # ---------- page-1 classification for vague headlines ----------
 
 VAGUE = re.compile(r"outcome of (the )?board meeting|regulation\s*30|general update|^updates?$|intimation|"
-                   r"disclosure under|announcement under|company update", re.I)
+                   r"disclosure under|announcement under|company update|change in management", re.I)
 
 
 def is_vague(a: Announcement) -> bool:
@@ -309,22 +214,12 @@ def rule_categories(text: str) -> list[str]:
     return found
 
 
-PAGE1_SYSTEM = ("You classify the first page of an Indian stock-exchange filing. List every decision or event it "
-                "announces, using only these categories: " + ", ".join(classify.CATEGORIES) +
-                '. Reply with JSON only: {"categories": [...], "summary": "one line, max 15 words, what was decided"}')
-
-
-def classify_page1(pdf: Path, client) -> dict:
-    """Returns {"category", "all", "method", "summary"?}. Text layer -> rules (free); scan -> classify model."""
+def classify_page1(pdf: Path) -> dict:
+    """Rules on the first page's text. Returns {"category", "all", "method"}."""
     text = (pdfs.page_texts(pdf, 1) or [""])[0]
-    if len(text.strip()) > 200:
-        cats = rule_categories(text)
-        if cats:
-            return {"category": strongest(cats), "all": cats, "method": "pdf_text_rules"}
-    if client is None:
-        return {"category": None, "all": [], "method": "unavailable"}
-    content = [llm.image_block(pdfs.render(pdf, 0, dpi=90)), llm.text_block("Classify this page.")]
-    data, usage, c = llm.call_json(client, config.CLASSIFY_MODEL, PAGE1_SYSTEM, content, 120, "page1_classify")
-    cats = [x for x in (data or {}).get("categories", []) if x in classify.CATEGORIES and x != "unclassified"]
-    return {"category": strongest(cats), "all": cats, "method": "pdf_image_llm",
-            "summary": (data or {}).get("summary"), "cost_usd": c}
+    if len(text.strip()) < 200:
+        return {"category": None, "all": [], "method": "no text on page 1"}
+    # Drop the letter's subject line so 'Outcome of Board Meeting' itself doesn't count.
+    body = re.split(r"\bsub(?:ject)?\s*[:.-]", text, maxsplit=1, flags=re.I)[-1]
+    cats = rule_categories(body)
+    return {"category": strongest(cats), "all": cats, "method": "page-1 text rules"}

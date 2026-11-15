@@ -12,7 +12,7 @@ import time
 from datetime import date, timedelta
 
 from finn import announcements as ann
-from finn import db, enrich, llm, prices
+from finn import db, enrich, prices
 from finn.announcements import Announcement
 from finn.portfolio import PORTFOLIO
 
@@ -46,15 +46,8 @@ def main():
     lo = (date.today() - timedelta(days=args.enrich_days)).isoformat()
     with db.connect() as conn:
         items = [Announcement(**dict(r)) for r in conn.execute("SELECT * FROM announcements WHERE dt >= ?", (lo,))]
-    client = llm.default_client()
-    if client is None:
-        print("\nANTHROPIC_API_KEY not set: page-1 reading of text PDFs only; no cards.")
-    st = enrich.run(items, client)
-    with db.connect() as conn:
-        spend = conn.execute("SELECT model, COUNT(*) n, SUM(cost_usd) usd FROM llm_usage GROUP BY model").fetchall()
-    print(f"\nenriched {len(items)} filings from the last {args.enrich_days} days: {st}")
-    for r in spend:
-        print(f"  {r['model']}: {r['n']} calls, ${r['usd']:.4f} all-time")
+    st = enrich.run(items)
+    print(f"\nread PDFs for {len(items)} filings from the last {args.enrich_days} days: {st}")
 
 
 if __name__ == "__main__":

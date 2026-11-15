@@ -2,7 +2,6 @@ yfinance>=0.2.50
 pandas
 requests
 pytest
-anthropic>=0.40
 fastapi
 uvicorn
 jinja2
@@ -12,3 +11,4 @@ pypdf
 pypdfium2
 pillow
 reportlab
+pdfplumber

@@ -28,6 +28,8 @@ _BOILER = [
     r"^outcome\s+of\s+(the\s+)?board\s+meeting(\s+held\s+on\s+[^-–:]+)?\s*[-–:]\s*(?=\S)",
 ]
 
+BOILER_TITLE = re.compile(r"^(disclosure|announcement|intimation)\s+(under|pursuant to)\s+reg|^change in management$", re.I)
+
 # Some ranking reasons are a more precise label than the category.
 REASON_LABELS = {"results date": "Results date", "results ad": "Results ad", "results deck": "Results deck",
                  "call scheduled": "Call scheduled", "routine debt issue": "Debt issue",
@@ -111,19 +113,21 @@ def _group(items: list[Item]) -> list[Item]:
         group.sort(key=lambda i: (i.c.score, i.results is not None or i.mgmt is not None), reverse=True)
         lead = group[0]
         lead.related = group[1:]
+        # one card per company-day: borrow a card a related filing has (e.g. the appointment in a board outcome)
+        lead.results = lead.results or next((r.results for r in lead.related if r.results), None)
+        lead.mgmt = lead.mgmt or next((r.mgmt for r in lead.related if r.mgmt and r.mgmt.people), None)
         out.append(lead)
     return sorted(out, key=lambda i: (i.c.score, i.a.dt), reverse=True)
 
 
-def build(window: str = "24h", settings: Settings | None = None, now: datetime | None = None,
-          llm_client="default") -> Digest:
+def build(window: str = "24h", settings: Settings | None = None, now: datetime | None = None) -> Digest:
     settings = settings or Settings()
     hours = WINDOWS.get(window, 24)
     end = (now or datetime.now(config.IST)).replace(tzinfo=None)
     start = end - timedelta(hours=hours)
 
     anns, source = _load_window(start, end)
-    res, stats = classify.classify(anns, prefs=settings.prefs(), client=llm_client)
+    res, stats = classify.classify(anns, prefs=settings.prefs())
     items = [Item(c, clean_headline(c.ann.headline, c.ann.symbol),
                   REASON_LABELS.get(c.reason.replace(" · on watchlist", ""), LABELS.get(c.category, c.category)),
                   c.category in settings.watch) for c in res]
@@ -140,6 +144,11 @@ def build(window: str = "24h", settings: Settings | None = None, now: datetime |
         if m:
             i.mgmt = cards.MgmtCard.from_json(m["card"]) if "card" in m else None
             i.card_error = i.card_error or m.get("error", "")
+
+    for i in items:   # a boilerplate headline says nothing; say what the filing says instead
+        p = i.mgmt.lead if i.mgmt else None
+        if p and BOILER_TITLE.match(i.title):
+            i.title = f"{p.name} {p.change or 'changes role'}" + (f" as {p.role}" if p.role else "")
 
     need = _group([i for i in items if i.c.tier == "top"])
     for i in need[:3]:   # the highlighter marks what to read first, nothing else

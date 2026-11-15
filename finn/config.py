@@ -35,24 +35,3 @@ def snapshot_dir() -> Path:
     d = data_dir() / "snapshots" / "announcements"
     d.mkdir(parents=True, exist_ok=True)
     return d
-
-# Model routing, one place. Override with env vars without touching code.
-#   classify: bulk, short prompts -> cheapest capable model
-#   extract:  reading results tables / appointment letters from page images -> strongest model
-CLASSIFY_MODEL = os.environ.get("FINN_CLASSIFY_MODEL", "claude-haiku-5-5")
-EXTRACT_MODEL = os.environ.get("FINN_EXTRACT_MODEL", "claude-opus-5-5")
-
-MODEL_NAMES = {"claude-haiku-5-5": "Haiku 5.5", "claude-sonnet-5-5": "Sonnet 5.5", "claude-opus-5-5": "Opus 5.5"}
-
-
-def model_name(model_id: str) -> str:
-    return MODEL_NAMES.get(model_id, model_id)
-
-
-# USD per million tokens (input, output), Claude API list prices, Nov 2026.
-# Haiku 5.5 rate is for prompts <=100K tokens (our classify batches are ~2-3K).
-MODEL_PRICES_PER_MTOK = {
-    "claude-haiku-5-5": (0.10, 0.50),
-    "claude-sonnet-5-5": (2.00, 10.00),
-    "claude-opus-5-5": (4.00, 20.00),
-}

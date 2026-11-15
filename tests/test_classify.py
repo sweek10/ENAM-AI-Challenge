@@ -1,5 +1,3 @@
-from types import SimpleNamespace
-
 import pytest
 
 from finn import classify as C
@@ -33,57 +31,26 @@ def test_rules_abstain_on_ambiguous(row):
     assert _rule(mk(0, cat, sub, head)) is None
 
 
-class FakeClient:
-    """Mimics anthropic.Anthropic().messages.create; labels everything press_release."""
-    def __init__(self):
-        self.calls = 0
-        self.messages = self
-
-    def create(self, **kw):
-        self.calls += 1
-        rows = kw["messages"][0]["content"].splitlines()[1:]
-        body = '{"r":[' + ",".join(f'[{i},"press_release"]' for i in range(len(rows))) + "]}"
-        n_in = (len(kw["system"]) + len(kw["messages"][0]["content"])) // 4
-        return SimpleNamespace(content=[SimpleNamespace(text=body)],
-                               usage=SimpleNamespace(input_tokens=n_in, output_tokens=len(body) // 3))
-
-
-def test_llm_only_for_leftovers_then_cached(tmp_data):
-    fake = FakeClient()
-    res, st = C.classify(ITEMS, client=fake)
+def test_ambiguous_items_stay_visible_as_unreviewed(tmp_data):
+    res, st = C.classify(ITEMS)
     n_amb = sum(1 for r in CORPUS if not r[4])
-    assert st["llm"] == n_amb and fake.calls == 1          # one batched call
+    assert st["unreviewed"] == n_amb
     assert st["rule:headline"] + st["rule:exchange_cat"] == len(ITEMS) - n_amb
-    assert st["input_tokens"] > 0 and st["cost_usd"] > 0
+    leftovers = [r for r in res if r.method == "unreviewed"]
+    assert all(r.tier == "routine" for r in leftovers)       # folded, not hidden
 
-    res2, st2 = C.classify(ITEMS, client=fake)              # second run: zero LLM
-    assert fake.calls == 1 and st2["llm_cache"] == n_amb and st2["input_tokens"] == 0
 
+def test_page1_label_used_for_ambiguous(tmp_data):
+    import json
     from finn import db
+    amb = next(a for a, r in zip(ITEMS, CORPUS) if not r[4])
     with db.connect() as c:
-        assert c.execute("SELECT COUNT(*) FROM llm_usage").fetchone()[0] == 1
-
-
-def test_no_api_key_degrades_visibly(tmp_data):
-    res, st = C.classify(ITEMS, client=None)
-    leftovers = [r for r in res if r.method == "no_llm"]
-    assert leftovers and all(r.tier == "routine" for r in leftovers)
-
-
-def test_llm_garbage_and_errors_dont_break(tmp_data):
-    class Bad(FakeClient):
-        def create(self, **kw):
-            return SimpleNamespace(content=[SimpleNamespace(text="sorry, no")],
-                                   usage=SimpleNamespace(input_tokens=10, output_tokens=3))
-
-    class Down(FakeClient):
-        def create(self, **kw):
-            raise RuntimeError("503")
-
-    _, st = C.classify(ITEMS, client=Bad())
-    assert st["no_llm"] > 0
-    _, st = C.classify(ITEMS, client=Down())
-    assert st["no_llm"] > 0 and st["llm_errors"]
+        c.execute(C.ENRICH_SCHEMA)
+        c.execute("INSERT INTO enrich VALUES (?,?,?,?)",
+                  (amb.id, "page1", json.dumps({"category": "results", "all": ["results"]}), 0))
+    res, st = C.classify(ITEMS)
+    got = next(r for r in res if r.ann.id == amb.id)
+    assert got.category == "results" and got.method == "pdf:page1" and st["pdf:page1"] == 1
 
 
 def test_priority_ordering():

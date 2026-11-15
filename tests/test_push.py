@@ -47,13 +47,13 @@ def test_digest_window_tiers_and_grouping(tmp_data):
         ("a4", "ITC", "2026-11-15T08:00:00", "Notice of Postal Ballot", "AGM/EGM", "", "", "bse"),
         ("a5", "ITC", "2026-11-10T08:00:00", "Resignation of CFO", "Company Update", "", "", "bse"),  # outside 24h
     ])
-    d = digest.build("24h", Settings(), now=now, llm_client=None)
+    d = digest.build("24h", Settings(), now=now)
     assert d.total == 4
     assert [i.a.id for i in d.need_you] == ["a1"]
     assert d.need_you[0].first and d.need_you[0].label == "Results"
     assert [i.a.id for i in d.notable] == ["a2"] and d.notable[0].label == "Results deck"
     assert "ITC" in d.routine and [i.a.id for i in d.hidden] == ["a3"]
-    assert digest.build("7d", Settings(), now=now, llm_client=None).total == 5
+    assert digest.build("7d", Settings(), now=now).total == 5
 
 
 def test_grouping_same_company_same_day(tmp_data):
@@ -62,13 +62,12 @@ def test_grouping_same_company_same_day(tmp_data):
         ("b1", "LT", "2026-11-15T09:00:00", "Unaudited Financial Results for Q2 FY27", "Result", "", "", "bse"),
         ("b2", "LT", "2026-11-15T09:10:00", "Acquisition of 51% stake in XYZ", "Company Update", "", "", "bse"),
     ])
-    d = digest.build("24h", Settings(), now=now, llm_client=None)
+    d = digest.build("24h", Settings(), now=now)
     assert len(d.need_you) == 1 and len(d.need_you[0].related) == 1
 
 
 def test_pages_render(tmp_data, monkeypatch):
     import app as webapp
-    monkeypatch.setattr(webapp.D.classify, "_default_client", lambda: None)
     c = TestClient(webapp.app)
     assert c.get("/").status_code == 200
     assert "Nothing needs you" in c.get("/?window=7d").text

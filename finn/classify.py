@@ -1,20 +1,16 @@
-"""Announcement classification: rules first, LLM only for what rules can't place.
+"""Announcement classification and priority. Deterministic: no LLM.
 
 Pipeline per announcement:
   1. rules on the headline (most specific signal)
   2. rules on the exchange's own category/subcategory fields
-  3. cached LLM label (classified before -> free)
-  4. LLM (Haiku 5.5), batched, only for the leftovers
-Rules are recomputed every run (free, deterministic). LLM labels are stored in
-SQLite keyed by announcement id + prompt version, so each filing costs at most once.
+  3. rules on the first page of the filing PDF (read once by the enrichment step)
+Anything still unplaced is shown as "unreviewed", never silently dropped.
 """
 import json
-import os
 import re
-import time
 from dataclasses import dataclass
 
-from . import config, db
+from . import db
 from .announcements import Announcement
 
 CATEGORIES = [
@@ -154,85 +150,25 @@ def tier_of(s: int) -> str:
     return next((name for cut, name in TIERS if s >= cut), "hidden")
 
 
-# ---------- LLM ----------
-PROMPT_VERSION = "v1"
-BATCH = 40
-
-SYSTEM = f"""You classify Indian stock-exchange corporate announcements.
-Return exactly one category per item from: {", ".join(CATEGORIES)}.
-Guide:
-results = quarterly/annual results, their board meeting, results deck or newspaper ad.
-M&A = acquisition, merger, demerger, JV, investing in or selling a subsidiary stake.
-fund_raise = rights issue, QIP, preferential allotment, buyback, debt/commercial paper.
-management_change = CEO/CFO/MD/director joining, resigning, retiring.
-litigation = lawsuits, regulatory orders, fines, insolvency proceedings.
-insider_trading = promoter/insider buying or selling own shares.
-earnings_call = concall notice, transcript, recording.  investor_meetings = analyst/fund meetings, conferences.
-credit_rating = rating assigned/changed/reaffirmed.  dividend = cash dividend, record date.
-bonus_split = bonus issue or split.  capex = new plant/capacity spend.
-press_release = order wins, products, partnerships, clarifications, other news.
-postal_ballot, agm_egm = those meetings' notices and results.  pledging = promoter pledge changes.
-unclassified = routine paperwork that does not move the stock.
-Reply with JSON only: {{"r":[[index,"category"],...]}}"""
-
-
 @dataclass
 class Classified:
     ann: Announcement
     category: str
-    method: str        # "rule:headline" | "rule:exchange_cat" | "llm_cache" | "llm" | "no_llm"
+    method: str        # "rule:headline" | "rule:exchange_cat" | "pdf:page1" | "unreviewed"
     rule: str
     score: int
     tier: str
     reason: str
 
 
-def _price(model: str) -> tuple[float, float]:
-    return config.MODEL_PRICES_PER_MTOK.get(model, (0.0, 0.0))
+ENRICH_SCHEMA = ("CREATE TABLE IF NOT EXISTS enrich (id TEXT NOT NULL, kind TEXT NOT NULL, data TEXT NOT NULL,"
+                 " ts REAL NOT NULL, PRIMARY KEY (id, kind))")
 
 
-def _default_client():
-    if not os.environ.get("ANTHROPIC_API_KEY"):
-        return None
-    import anthropic
-    return anthropic.Anthropic()
-
-
-def _llm_batch(client, items: list[Announcement]) -> tuple[dict[str, str], dict]:
-    lines = [f"{i}|{a.category}|{a.subcategory}|{a.headline[:220]}" for i, a in enumerate(items)]
-    resp = client.messages.create(
-        model=config.CLASSIFY_MODEL, max_tokens=16 + 12 * len(items), temperature=0, system=SYSTEM,
-        messages=[{"role": "user", "content": "index|exchange_category|subcategory|headline\n" + "\n".join(lines)}],
-    )
-    text = "".join(getattr(b, "text", "") for b in resp.content)
-    m = re.search(r"\{.*\}", text, re.S)
-    labels: dict[str, str] = {}
-    try:
-        for idx, cat in json.loads(m.group(0))["r"] if m else []:
-            if isinstance(idx, int) and 0 <= idx < len(items):
-                labels[items[idx].id] = cat if cat in CATEGORIES else "unclassified"
-    except (ValueError, KeyError, TypeError):
-        pass
-    u = resp.usage
-    return labels, {"input_tokens": u.input_tokens, "output_tokens": u.output_tokens}
-
-
-def _log_usage(conn, purpose: str, n: int, usage: dict) -> None:
-    pin, pout = _price(config.CLASSIFY_MODEL)
-    cost = usage["input_tokens"] / 1e6 * pin + usage["output_tokens"] / 1e6 * pout
-    conn.execute(
-        "INSERT INTO llm_usage(ts,model,purpose,n_items,input_tokens,output_tokens,cost_usd) VALUES (?,?,?,?,?,?,?)",
-        (time.time(), config.CLASSIFY_MODEL, purpose, n, usage["input_tokens"], usage["output_tokens"], cost),
-    )
-
-
-def classify(items: list[Announcement], prefs: Prefs | None = None, client="default") -> tuple[list[Classified], dict]:
+def classify(items: list[Announcement], prefs: Prefs | None = None) -> tuple[list[Classified], dict]:
     """Classify + prioritise. Returns (results sorted by score desc, run stats)."""
     prefs = prefs or Prefs()
-    if client == "default":
-        client = _default_client()
-    stats = {"total": len(items), "rule:headline": 0, "rule:exchange_cat": 0, "pdf:page1": 0, "llm_cache": 0,
-             "llm": 0, "no_llm": 0, "llm_calls": 0, "models": set(), "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0}
+    stats = {"total": len(items), "rule:headline": 0, "rule:exchange_cat": 0, "pdf:page1": 0, "unreviewed": 0}
 
     labelled: dict[str, tuple[str, str, str]] = {}  # id -> (category, method, rule)
     pending: list[Announcement] = []
@@ -247,64 +183,24 @@ def classify(items: list[Announcement], prefs: Prefs | None = None, client="defa
             continue
         pending.append(a)
 
-    with db.connect() as conn:
-        if pending:  # page 1 of the PDF already read by the enrichment step?
-            conn.execute("CREATE TABLE IF NOT EXISTS enrich (id TEXT NOT NULL, kind TEXT NOT NULL, data TEXT NOT NULL,"
-                         " ts REAL NOT NULL, PRIMARY KEY (id, kind))")
+    if pending:  # page 1 of the PDF already read by the enrichment step?
+        with db.connect() as conn:
+            conn.execute(ENRICH_SCHEMA)
             q = ",".join("?" * len(pending))
             for r in conn.execute(f"SELECT id, data FROM enrich WHERE kind='page1' AND id IN ({q})",
                                   [a.id for a in pending]):
                 d = json.loads(r["data"])
                 if d.get("category"):
-                    labelled[r["id"]] = (d["category"], "pdf:page1", d.get("method", ""))
-                    if d.get("method") == "pdf_image_llm":
-                        stats["models"].add(config.CLASSIFY_MODEL)
-            pending = [a for a in pending if a.id not in labelled]
-        if pending:
-            q = ",".join("?" * len(pending))
-            rows = conn.execute(
-                f"SELECT id, category, model FROM llm_labels WHERE prompt_version=? AND id IN ({q})",
-                [PROMPT_VERSION, *[a.id for a in pending]]).fetchall()
-            cached = {r["id"]: r["category"] for r in rows}
-            stats["models"].update(r["model"] for r in rows)
-            for a in pending:
-                if a.id in cached:
-                    labelled[a.id] = (cached[a.id], "llm_cache", "")
-            pending = [a for a in pending if a.id not in cached]
-
-        if pending and client is not None:
-            for i in range(0, len(pending), BATCH):
-                chunk = pending[i:i + BATCH]
-                try:
-                    labels, usage = _llm_batch(client, chunk)
-                except Exception as e:  # API down -> degrade, don't break the digest
-                    labels, usage = {}, {"input_tokens": 0, "output_tokens": 0}
-                    stats.setdefault("llm_errors", []).append(f"{type(e).__name__}: {e}")
-                else:
-                    stats["llm_calls"] += 1
-                    stats["models"].add(config.CLASSIFY_MODEL)
-                    _log_usage(conn, "classify", len(chunk), usage)
-                stats["input_tokens"] += usage["input_tokens"]
-                stats["output_tokens"] += usage["output_tokens"]
-                for a in chunk:
-                    if a.id in labels:
-                        labelled[a.id] = (labels[a.id], "llm", "")
-                        conn.execute(
-                            "INSERT OR REPLACE INTO llm_labels(id,category,model,prompt_version,ts) VALUES (?,?,?,?,?)",
-                            (a.id, labels[a.id], config.CLASSIFY_MODEL, PROMPT_VERSION, time.time()))
-
-    pin, pout = _price(config.CLASSIFY_MODEL)
-    stats["cost_usd"] = stats["input_tokens"] / 1e6 * pin + stats["output_tokens"] / 1e6 * pout
+                    labelled[r["id"]] = (d["category"], "pdf:page1", ",".join(d.get("all", [])))
 
     out = []
     for a in items:
-        cat, method, rule = labelled.get(a.id, ("unclassified", "no_llm", ""))
+        cat, method, rule = labelled.get(a.id, ("unclassified", "unreviewed", ""))
         stats[method] += 1
-        if method == "no_llm":  # unknown and no LLM available: keep visible, never bury silently
-            s, why = 20, "unreviewed (no LLM)"
+        if method == "unreviewed":  # unknown: keep visible, never bury silently
+            s, why = 20, "unreviewed"
         else:
             s, why = score(cat, f"{a.headline} | {a.category} | {a.subcategory}", prefs)
         out.append(Classified(a, cat, method, rule, s, tier_of(s), why))
     out.sort(key=lambda c: (c.score, c.ann.dt), reverse=True)
-    stats["models"] = sorted(stats["models"])
     return out, stats
