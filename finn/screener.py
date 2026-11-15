@@ -58,6 +58,10 @@ def direct_pdf(url: str) -> str:
     m = re.search(r"Pname=([\w-]+\.pdf)", url, re.I)
     if m:
         return f"https://www.bseindia.com/xml-data/corpfiling/AttachHis/{m[1]}"
+    m = re.search(r"^(https?://[^/]+)/[^?]*pdf-viewer\?pdf=([^&]+\.pdf)", url, re.I)   # e.g. marutisuzuki.com viewer
+    if m:
+        from urllib.parse import unquote
+        return m[1] + unquote(m[2])
     return url
 
 

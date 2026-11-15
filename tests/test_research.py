@@ -173,3 +173,22 @@ def test_company_without_transcripts(tmp_data, monkeypatch):
     assert r["no_transcripts"] and r["groups"] == [] and r["quarters"]
     import app as webapp
     assert "No earnings-call transcripts on file" in TestClient(webapp.app).get("/research/KPITTECH").text
+
+
+def test_failed_transcripts_keep_complete_saved_copy(stubbed, monkeypatch):
+    good = R.build("KPITTECH")
+    assert good["groups"] and not good["problems"]
+    cache.write("guidance", "unused", {})                         # leave cache dir in place
+    import shutil
+    from finn import config
+    shutil.rmtree(config.cache_dir() / "guidance")                 # forget extracted guidance
+    monkeypatch.setattr(pdfs, "fetch", lambda url: (_ for _ in ()).throw(RuntimeError("403 from BSE")))
+    r = R.build("KPITTECH")
+    assert r["stale"] and "saved" in r["stale"] and len(r["groups"]) == len(good["groups"])
+
+
+def test_viewer_links_resolve_to_pdf():
+    u = ("https://www.marutisuzuki.com/pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2F"
+         "company-reports%2F2026-2027%2FTranscript_earnings_call_Maruti_Suzuki_Q2_FY_27.pdf")
+    assert screener.direct_pdf(u) == ("https://www.marutisuzuki.com/content/dam/arena-eds/corporate/pdf/"
+                                     "company-reports/2026-2027/Transcript_earnings_call_Maruti_Suzuki_Q2_FY_27.pdf")

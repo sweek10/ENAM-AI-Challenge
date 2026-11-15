@@ -28,7 +28,7 @@ def get(ids: list[str], kind: str) -> dict[str, dict]:
                 conn.execute(f"SELECT id, data FROM enrich WHERE kind=? AND id IN ({q})", [kind, *ids])}
 
 
-def _have(aid: str, kind: str) -> bool:
+def _have(aid: str, kind: str, retry_errors: bool = False) -> bool:
     with db.connect() as conn:
         conn.execute(classify.ENRICH_SCHEMA)
         r = conn.execute("SELECT data, ts FROM enrich WHERE id=? AND kind=?", (aid, kind)).fetchone()
@@ -37,7 +37,9 @@ def _have(aid: str, kind: str) -> bool:
     d = json.loads(r["data"])
     if d.get("parser") != PARSER_VERSION:
         return False
-    return not ("error" in d and time.time() - r["ts"] > RETRY_ERRORS_AFTER)
+    if "error" in d:
+        return not (retry_errors or time.time() - r["ts"] > RETRY_ERRORS_AFTER)
+    return True
 
 
 def _put(aid: str, kind: str, data: dict) -> None:
@@ -57,13 +59,13 @@ def needs_mgmt(c: classify.Classified) -> bool:
     return c.method == "pdf:page1" and "management_change" in c.rule   # board outcome that also changes people
 
 
-def run(items: list[Announcement], prefs=None) -> dict:
+def run(items: list[Announcement], prefs=None, retry_errors: bool = False) -> dict:
     """Enrich what needs it. Returns counts per kind for the refresh log."""
     stats = {"page1": 0, "results": 0, "mgmt": 0, "errors": 0, "skipped_cached": 0}
     for a in items:
         if not (a.pdf_url and cards.is_vague(a)):
             continue
-        if _have(a.id, "page1"):
+        if _have(a.id, "page1", retry_errors):
             stats["skipped_cached"] += 1
             continue
         try:
@@ -83,7 +85,7 @@ def run(items: list[Announcement], prefs=None) -> dict:
                                  ("mgmt", needs_mgmt(c), cards.extract_mgmt)):
             if not wanted:
                 continue
-            if _have(a.id, kind):
+            if _have(a.id, kind, retry_errors):
                 stats["skipped_cached"] += 1
                 continue
             try:

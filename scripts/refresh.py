@@ -46,7 +46,7 @@ def main():
     lo = (date.today() - timedelta(days=args.enrich_days)).isoformat()
     with db.connect() as conn:
         items = [Announcement(**dict(r)) for r in conn.execute("SELECT * FROM announcements WHERE dt >= ?", (lo,))]
-    st = enrich.run(items)
+    st = enrich.run(items, retry_errors=True)   # a manual refresh retries earlier failures
     print(f"\nread PDFs for {len(items)} filings from the last {args.enrich_days} days: {st}")
 
 

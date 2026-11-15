@@ -236,6 +236,13 @@ def build(ticker: str, calls: int = CALLS) -> dict:
     out_groups.sort(key=lambda g: (g["verdict"] == "unclear", metric_order[g["metric"]], -(g["of"] or 0),
                                    VERDICT_ORDER[g["verdict"]]))
     judged = [g for g in out_groups if g["verdict"] != "unclear"]
+    snap = _snapshot_path(t)
+    if problems and snap.exists():     # e.g. a cloud host that BSE won't serve: keep the complete saved copy
+        saved = json.loads(snap.read_text())
+        if not saved.get("problems") and len(saved.get("groups", [])) >= len(out_groups):
+            saved["stale"] = (f"Couldn't fetch every transcript just now; showing the analysis saved "
+                              f"{saved['built_at'][:16].replace('T', ' ')}.")
+            return saved
     data = {
         "ticker": t, "name": company.name, "screener_url": company.url,
         "built_at": datetime.now(config.IST).isoformat(timespec="minutes"),
@@ -245,7 +252,7 @@ def build(ticker: str, calls: int = CALLS) -> dict:
         "no_transcripts": not used,
     }
     try:
-        _snapshot_path(t).write_text(json.dumps(data, indent=1, default=str))
+        snap.write_text(json.dumps(data, indent=1, default=str))
     except OSError:
         pass
     return data

@@ -1,0 +1,15 @@
+# Render blueprint: free web service. Render > New > Blueprint > pick this repo.
+# The app serves the data committed in data/ (prices, filings, parsed cards, research pages).
+# Refreshing that data runs on a laptop (scripts.refresh), because exchanges often block cloud IPs.
+services:
+  - type: web
+    name: finn
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app:app --host 0.0.0.0 --port $PORT --proxy-headers --forwarded-allow-ips '*'
+    healthCheckPath: /healthz
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7

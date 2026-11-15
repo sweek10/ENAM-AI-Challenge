@@ -245,6 +245,11 @@ def test_enrich_end_to_end(tmp_path, tmp_data, monkeypatch):
     st = enrich.run(items)
     assert st["page1"] == 1 and st["results"] == 1 and st["mgmt"] == 1
     assert enrich.run(items)["skipped_cached"] == 3          # never re-reads a filing
+    from finn import classify as C
+    with db.connect() as c:                                   # a failed read is retried on a manual refresh
+        c.execute("UPDATE enrich SET data=? WHERE id='x1' AND kind='results'", ('{"error": "no pdfplumber", "parser": "%s"}' % enrich.PARSER_VERSION,))
+    assert enrich.run(items)["results"] == 0
+    assert enrich.run(items, retry_errors=True)["results"] == 1
 
     res, stats = classify.classify(items)
     by = {c.ann.id: c for c in res}
