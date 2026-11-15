@@ -2,7 +2,7 @@
  "ticker": "MARUTI",
  "name": "Maruti Suzuki India Ltd",
  "screener_url": "https://www.screener.in/company/MARUTI/consolidated/",
- "built_at": "2026-11-15T19:33+05:30",
+ "built_at": "2026-11-15T22:03+05:30",
  "calls": [
   {
    "label": "Oct 2026",
@@ -101,9 +101,9 @@
   }
  ],
  "problems": [
-  "Oct 2026: HTTPSConnectionPool(host='www.marutisuzuki.com', port=443): Max retries exceeded with url: /pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcomp",
-  "Jul 2026: HTTPSConnectionPool(host='www.marutisuzuki.com', port=443): Max retries exceeded with url: /pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcomp",
-  "Jan 2026: HTTPSConnectionPool(host='marutistoragenew.blob.core.windows.net', port=443): Max retries exceeded with url: /msilintiwebpdf/Transcript_earnings_call_Maruti_Suz"
+  "Oct 2026: could not fetch PDF https://www.marutisuzuki.com/pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcompany-reports%2F2026-2027%2FTranscript_earnin",
+  "Jul 2026: could not fetch PDF https://www.marutisuzuki.com/pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcompany-reports%2F2026-2027%2FTranscript_earnin",
+  "Jan 2026: could not fetch PDF https://marutistoragenew.blob.core.windows.net/msilintiwebpdf/Transcript_earnings_call_Maruti_Suzuki_Q3_FY_26.pdf: HTTP 200, 1124 bytes"
  ],
  "stale": null,
  "no_transcripts": false

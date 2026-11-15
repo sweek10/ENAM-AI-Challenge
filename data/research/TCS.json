@@ -2,7 +2,7 @@
  "ticker": "TCS",
  "name": "Tata Consultancy Services Ltd",
  "screener_url": "https://www.screener.in/company/TCS/consolidated/",
- "built_at": "2026-11-15T19:33+05:30",
+ "built_at": "2026-11-15T22:02+05:30",
  "calls": [
   {
    "label": "Oct 2026",
@@ -146,7 +146,7 @@
   }
  ],
  "problems": [
-  "Jul 2026: HTTPSConnectionPool(host='www.tcs.com', port=443): Max retries exceeded with url: /content/dam/tcs/investor-relations/financial-statements/2025-26/q1/Management"
+  "Jul 2026: could not fetch PDF https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q1/Management%20Commentary/Transcript%20of%20the%20Q1%20"
  ],
  "stale": null,
  "no_transcripts": false
