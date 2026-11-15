@@ -125,6 +125,9 @@ def judge(g: Guidance, act: Actuals) -> dict:
         return {**res, "verdict": "unclear", "note": "Results for this period aren't in the table."}
     if val is None:
         return {**res, "verdict": "unclear", "note": how or "Couldn't compute the actual."}
+    if g.basis == "ebit":
+        return {**res, "verdict": "unclear",
+                "note": "Guided on EBIT margin; the results table shows operating margin before depreciation, so they don't compare."}
     if g.basis == "cc":
         return {**res, "verdict": "unclear",
                 "note": "Guided in constant currency or dollars; filings report rupees, so the rupee figure is shown for context only."}

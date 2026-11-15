@@ -80,27 +80,50 @@ templates.env.globals.update(money=money, linkedin_search=linkedin_search, METRI
 
 
 @app.get("/", response_class=HTMLResponse)
-def home(request: Request, window: str = "24h"):
-    window = window if window in D.WINDOWS else "24h"
+def home(request: Request, window: str | None = None):
     st = S.load()
-    dg = D.build(window, st)
-    return templates.TemplateResponse(request, "digest.html", {"d": dg, "s": st, "windows": list(D.WINDOWS)})
+    auto_from = None
+    if window in D.WINDOWS:
+        dg = D.build(window, st)
+    else:   # no choice made: open on the shortest window that has filings, and say so
+        for w in D.WINDOWS:
+            dg = D.build(w, st)
+            if dg.total:
+                break
+        auto_from = "24h" if dg.window != "24h" and dg.total else None
+    return templates.TemplateResponse(request, "digest.html",
+                                      {"d": dg, "s": st, "windows": list(D.WINDOWS), "auto_from": auto_from})
 
 
 @app.get("/settings", response_class=HTMLResponse)
-def settings_page(request: Request, saved: int = 0):
+def settings_page(request: Request, saved: int = 0, kept: str = ""):
     return templates.TemplateResponse(request, "settings.html", {
-        "s": S.load(), "categories": [c for c in CATEGORIES if c != "unclassified"], "saved": saved})
+        "s": S.load(), "categories": [c for c in CATEGORIES if c != "unclassified"], "saved": saved,
+        "kept": [k for k in kept.split(",") if k]})
 
 
 @app.post("/settings")
-async def settings_save(request: Request, price_move_pct: float = Form(...),
-                        volume_multiple: float = Form(...), volume_lookback: int = Form(...)):
+async def settings_save(request: Request):
+    """Bad or missing numbers keep the previous value and say so, rather than erroring."""
     form = await request.form()
+    cur, bad = S.load(), []
+
+    def num(name, cast, fallback, label):
+        raw = str(form.get(name, "")).strip()
+        try:
+            return cast(raw)
+        except ValueError:
+            bad.append(label)
+            return fallback
+
     watch = [c for c in CATEGORIES if form.get(f"cat_{c}") == "watch"]
     mute = [c for c in CATEGORIES if form.get(f"cat_{c}") == "mute"]
-    S.save(S.Settings(price_move_pct, volume_multiple, volume_lookback, watch, mute))
-    return RedirectResponse("/settings?saved=1", status_code=303)
+    if not any(k.startswith("cat_") for k in form.keys()):
+        watch, mute = cur.watch, cur.mute
+    S.save(S.Settings(num("price_move_pct", float, cur.price_move_pct, "day move"),
+                      num("volume_multiple", float, cur.volume_multiple, "volume spike"),
+                      num("volume_lookback", int, cur.volume_lookback, "average window"), watch, mute))
+    return RedirectResponse("/settings?saved=1" + ("&kept=" + ",".join(bad) if bad else ""), status_code=303)
 
 
 @app.get("/api/digest")

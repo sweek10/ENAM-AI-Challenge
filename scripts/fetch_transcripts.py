@@ -1,11 +1,12 @@
-"""Warm the cache: screener.in page + the last N concall transcripts for some tickers.
+"""Warm the cache and save research pages: screener.in + the last N transcripts, then build
+data/research/<TICKER>.json (committed, so the deployed app has them even if screener is slow).
 
     python -m scripts.fetch_transcripts KPITTECH TCS
     python -m scripts.fetch_transcripts --portfolio
 """
 import argparse
 
-from finn import pdfs, screener
+from finn import pdfs, research, screener
 from finn.portfolio import PORTFOLIO
 
 
@@ -29,7 +30,12 @@ def main():
                 got += 1
             except Exception as e:
                 print(f"{t:<11} {cc.label}: {e}")
-        print(f"{t:<11} {c.name[:30]:<30} {len(c.quarters)} quarters, {got}/{min(args.n, len(c.concalls))} transcripts")
+        try:
+            r = research.build(t)
+            verdict = f"{r['judged']} checked, {r['unclear']} unclear"
+        except Exception as e:
+            verdict = f"research failed: {e}"
+        print(f"{t:<11} {c.name[:30]:<30} {len(c.quarters)} quarters, {got}/{min(args.n, len(c.concalls))} transcripts, {verdict}")
 
 
 if __name__ == "__main__":

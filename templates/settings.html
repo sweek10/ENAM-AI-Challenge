@@ -31,7 +31,7 @@ legend{font-weight:700; font-size:15px; margin-bottom:10px; padding:0}
 </style>
 {% endblock %}
 {% block body %}
-{% if saved %}<p class="toast" role="status">Settings saved. Your digest uses them now.</p>{% endif %}
+{% if saved %}<p class="toast" role="status">Settings saved. Your digest uses them now.{% if kept %} Kept the previous {{ kept|join(' and ') }}: that wasn't a number.{% endif %}</p>{% endif %}
 <h1>What counts as unusual</h1>
 <p class="lede">FINN checks every stock against these at each end-of-day close.</p>
 <form method="post" action="/settings">
