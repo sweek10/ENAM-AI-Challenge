@@ -267,8 +267,10 @@ def headline(judged: list[dict]) -> str:
     if not judged:
         return ""
     g = judged[0]
-    so_far = "" if g["quarters"] == g["of"] else f" {g['quarters']} of {g['of']} quarters in,"
-    verb = {"delivered": "delivered", "missed": "missed", "on track": "on track", "behind": "behind",
-            "too early": "too early to tell"}[g["verdict"]]
-    act = "" if g["actual"] is None else f" it's at {g['actual']:.1f}%."
-    return f"Promised {g['target']} {g['label'].lower()} for {g['period']}.{so_far}{act} {verb.capitalize()}."
+    verdict = g["verdict"].capitalize()
+    promise = f"Promised {g['target']} {g['label'].lower()} for {g['period']}"
+    if g["actual"] is None:
+        return f"{promise}. {verdict}."
+    if g["quarters"] == g["of"]:
+        return f"{promise}; delivered {g['actual']:.1f}%. {verdict}."
+    return f"{promise}; {g['actual']:.1f}% after {g['quarters']} of {g['of']} quarters. {verdict}."

@@ -2,7 +2,7 @@
  "ticker": "LT",
  "name": "Larsen & Toubro Ltd",
  "screener_url": "https://www.screener.in/company/LT/consolidated/",
- "built_at": "2026-11-15T19:31+05:30",
+ "built_at": "2026-11-15T19:33+05:30",
  "calls": [
   {
    "label": "Jul 2026",
@@ -460,7 +460,7 @@
  ],
  "judged": 2,
  "unclear": 8,
- "headline": "Promised 15% revenue growth for FY26. it's at 11.8%. Missed.",
+ "headline": "Promised 15% revenue growth for FY26; delivered 11.8%. Missed.",
  "quarters": [
   {
    "q": "Jun 2025",

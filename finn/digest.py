@@ -145,6 +145,11 @@ def build(window: str = "24h", settings: Settings | None = None, now: datetime |
             i.mgmt = cards.MgmtCard.from_json(m["card"]) if "card" in m else None
             i.card_error = i.card_error or m.get("error", "")
 
+    for i in items:   # a management filing we couldn't read shouldn't lead the digest
+        if i.c.category == "management_change" and i.mgmt is not None and not i.mgmt.people and i.c.score >= 70:
+            i.c.score, i.c.reason = 45, "details not found in the filing"
+            i.c.tier = classify.tier_of(45)
+
     for i in items:   # a boilerplate headline says nothing; say what the filing says instead
         p = i.mgmt.lead if i.mgmt else None
         if p and BOILER_TITLE.match(i.title):

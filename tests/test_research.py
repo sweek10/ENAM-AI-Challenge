@@ -135,7 +135,7 @@ def test_build_caches_transcripts(stubbed):
     assert r["ticker"] == "KPITTECH" and len(r["calls"]) == 4 and len(stubbed) == 4
     rev = next(x for x in r["groups"] if x["metric"] == "revenue_growth" and x["basis"] == "inr" and x["period"] == "FY27")
     assert rev["verdict"] == "behind" and len(rev["trail"]) == 4 and rev["trail"][-1]["change"] == "kept"
-    assert r["headline"].startswith("Promised 18–20% revenue growth for FY27.")
+    assert r["headline"].startswith("Promised 18–20% revenue growth for FY27; ") and "after 2 of 4 quarters. Behind." in r["headline"]
     R.build("KPITTECH")
     assert len(stubbed) == 4                                  # second build: transcripts from cache
 
