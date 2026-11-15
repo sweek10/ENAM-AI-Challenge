@@ -1,7 +1,7 @@
 """Hand-written test headlines in BSE/NSE style, with expected category.
 
 These are TEST DATA, not real filings. `None` in the rule column means the rules
-are expected to abstain (genuinely ambiguous -> should go to the LLM).
+are expected to abstain (genuinely ambiguous -> page-1 rules or "unreviewed").
 Columns: (exchange_category, subcategory, headline, expected_category, rule_should_catch)
 """
 
@@ -70,7 +70,7 @@ CORPUS = [
     ("Company Update", "Others", "Business Responsibility and Sustainability Report", "unclassified", True),
     ("Company Update", "Compliance", "Appointment of Secretarial Auditor", "unclassified", True),
     ("Company Update", "Newspaper Publication", "Copy of Newspaper Advertisement - Notice to shareholders on IEPF transfer", "unclassified", True),
-    # genuinely ambiguous -> rules should abstain, LLM decides
+    # genuinely ambiguous -> headline rules should abstain
     ("Board Meeting", "Outcome of Board Meeting", "Outcome of Board Meeting held on November 12, 2026", "unknown", False),
     ("Company Update", "General Updates", "Disclosure under Regulation 30 of SEBI (LODR) Regulations, 2015", "unknown", False),
     ("Company Update", "Updates", "Intimation pursuant to Regulation 30", "unknown", False),
