@@ -64,6 +64,26 @@ h2 a, h2 span{font-weight:400; font-size:13px; color:var(--slate)}
 .fold-body .li{grid-template-columns:1fr}
 .fold-body .li .m{grid-column:1}
 
+
+/* results card: four numbers, two comparisons, nothing else */
+.rc{width:100%; border-collapse:collapse; margin:4px 0 8px; font-size:14px}
+.rc th{font-weight:500; color:var(--slate); font-size:12px; text-align:right; padding:0 0 4px}
+.rc th:first-child{text-align:left}
+.rc td{padding:5px 0; text-align:right; border-top:1px solid var(--faint)}
+.rc td:first-child{text-align:left; font-weight:600}
+.rc td.v{font-weight:650}
+.rc .nf{color:var(--slate); font-weight:400; font-style:italic}
+.rc sup{color:var(--slate); font-weight:400}
+.src{font-size:12.5px; color:var(--slate); margin:2px 0 8px}
+.src a{color:var(--slate)}
+.warn{font-size:12.5px; color:var(--down); margin:0 0 8px}
+/* management card */
+.who{margin:2px 0 8px}
+.who .nm{font-size:16px; font-weight:700}
+.who .rl{font-size:14px}
+.who .bg{font-size:14px; margin:6px 0 4px; line-height:1.4}
+.who .prior{font-size:12.5px; color:var(--slate)}
+.p1{font-size:14px; color:var(--slate); margin:-4px 0 8px}
 .empty{background:var(--sheet); border-radius:var(--r-sheet); padding:18px; color:var(--slate)}
 footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
 </style>
@@ -113,6 +133,48 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
 <article class="card">
   <div class="row1"><span class="tk">{{ i.a.symbol }}</span>{% set nm = BY_SYMBOL[i.a.symbol].name if i.a.symbol in BY_SYMBOL else '' %}{% if nm|upper != i.a.symbol %}<span class="co">{{ nm }}</span>{% endif %}{{ move_chip(i.a.symbol) }}</div>
   <p class="title"><span class="{{ 'hl' if i.first }}">{{ i.title }}</span></p>
+  {% if i.p1_summary %}<p class="p1">{{ i.p1_summary }}</p>{% endif %}
+  {% if i.results %}{% set rc = i.results %}
+    {% if rc.status == 'not_found' %}
+    <p class="src">Headline numbers not found in this filing. <a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open the filing</a></p>
+    {% else %}
+    <table class="rc" aria-label="Headline numbers">
+      <thead><tr><th>{{ rc.unit or '' }}</th><th>{{ rc.periods.get('current') or 'This quarter' }}</th><th>QoQ</th><th>YoY</th></tr></thead>
+      <tbody>
+      {% for k in METRICS %}{% set m = rc.metrics[k] %}
+      <tr>
+        <td>{{ m.name }}{% if m.derived %}<sup>*</sup>{% endif %}</td>
+        {% if m.current is none %}<td class="v nf" colspan="3">not found</td>
+        {% else %}
+        <td class="v">{{ money(m.current) }}</td>
+        <td class="{{ tone(m.qoq_pct) if m.qoq_pct is not none else 'flat' }}">{{ pct(m.qoq_pct) if m.qoq_pct is not none else '–' }}</td>
+        <td class="{{ tone(m.yoy_pct) if m.yoy_pct is not none else 'flat' }}">{{ pct(m.yoy_pct) if m.yoy_pct is not none else '–' }}</td>
+        {% endif %}
+      </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% for w in rc.checks %}<p class="warn">{{ w }}</p>{% endfor %}
+    <p class="src">{{ (rc.statement or '')|capitalize }} statement{% if rc.page %}, <a href="{{ i.a.pdf_url }}#page={{ rc.page }}" target="_blank" rel="noopener">page {{ rc.page }} of the filing</a>{% endif %}. <sup>*</sup>EBITDA isn't printed in the filing: it's PBT + finance costs + depreciation − other income. Read by {{ model_name(rc.model) }}.</p>
+    {% endif %}
+  {% endif %}
+  {% if i.mgmt %}{% set mc = i.mgmt %}{% set p = mc.lead %}
+    {% if p %}
+    <div class="who">
+      <div><span class="nm">{{ p.name }}</span></div>
+      <div class="rl">{{ (p.change or 'change')|capitalize }}{% if p.role %}, {{ p.role }}{% endif %}{% if p.effective %}, effective {{ p.effective }}{% endif %}</div>
+      {% if p.reason %}<div class="bg">Reason given: {{ p.reason }}</div>{% endif %}
+      {% if p.change in ('appointed','re-appointed') or p.background %}
+      <div class="bg">{{ p.background or 'Background not found in the filing.' }}</div>
+      {% if p.prior_roles %}<div class="prior">Before this: {{ p.prior_roles|join('; ') }}</div>{% endif %}
+      {% endif %}
+    </div>
+    <p class="src">From the filing{% if p.page %}, <a href="{{ i.a.pdf_url }}#page={{ p.page }}" target="_blank" rel="noopener">page {{ p.page }}</a>{% endif %}{% if mc.people|length > 1 %}, plus {{ mc.people|length - 1 }} other change{{ 's' if mc.people|length > 2 }}{% endif %}. <a href="{{ linkedin_search(p.name, BY_SYMBOL[i.a.symbol].name if i.a.symbol in BY_SYMBOL else '') }}" target="_blank" rel="noopener">Find on LinkedIn</a></p>
+    {% else %}
+    <p class="src">No named person found in the filing. <a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open the filing</a></p>
+    {% endif %}
+  {% endif %}
+  {% if i.card_error %}<p class="src">Couldn't read this filing ({{ i.card_error[:80] }}). <a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open the filing</a></p>{% endif %}
   <div class="meta">
     <span class="tag">{{ i.label }}</span><span>{{ ago(i.a.dt, ref) }}</span>{% if i.why %}<span>{{ i.why }}</span>{% endif %}
     {% if i.a.pdf_url %}<a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open filing</a>{% endif %}
@@ -168,7 +230,7 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
 
 <footer>
   {% set st = d.stats %}
-  Sorted {{ st['rule:headline'] + st['rule:exchange_cat'] }} of {{ d.total }} by rules{% if st['llm'] or st['llm_cache'] %}, {{ st['llm'] + st['llm_cache'] }} by Haiku{% endif %}{% if st['no_llm'] %}, {{ st['no_llm'] }} unreviewed{% endif %}.
+  Sorted {{ st['rule:headline'] + st['rule:exchange_cat'] }} of {{ d.total }} by rules{% if st['pdf:page1'] %}, {{ st['pdf:page1'] }} by reading the filing's first page{% endif %}{% if st['llm'] or st['llm_cache'] %}, {{ st['llm'] + st['llm_cache'] }} by {{ st['models']|map('model_name')|join(' and ') if st['models'] else 'an LLM' }}{% endif %}{% if st['no_llm'] %}, {{ st['no_llm'] }} unreviewed{% endif %}.
   {% if st['cost_usd'] %}This view cost ${{ '%.5f'|format(st['cost_usd']) }}.{% endif %}
   Prices are end of day{% if d.moves %}, last close {{ (d.moves.values()|list)[0].date }}{% endif %}.
   {% if d.source == 'snapshot' %}Filings from saved snapshot.{% endif %}

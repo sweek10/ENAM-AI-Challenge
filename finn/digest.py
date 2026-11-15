@@ -4,7 +4,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 
-from . import alerts, classify, config, db
+from . import alerts, cards, classify, config, db, enrich
 from .announcements import Announcement, load_snapshot
 from .portfolio import BY_SYMBOL, PORTFOLIO
 from .settings import Settings
@@ -54,6 +54,10 @@ class Item:
     watched: bool
     related: list["Item"] = field(default_factory=list)
     first: bool = False
+    results: "cards.ResultsCard | None" = None
+    mgmt: "cards.MgmtCard | None" = None
+    card_error: str = ""
+    p1_summary: str = ""
 
     @property
     def why(self) -> str:
@@ -104,7 +108,7 @@ def _group(items: list[Item]) -> list[Item]:
         buckets[(it.a.symbol, it.a.dt[:10])].append(it)
     out = []
     for group in buckets.values():
-        group.sort(key=lambda i: i.c.score, reverse=True)
+        group.sort(key=lambda i: (i.c.score, i.results is not None or i.mgmt is not None), reverse=True)
         lead = group[0]
         lead.related = group[1:]
         out.append(lead)
@@ -123,6 +127,19 @@ def build(window: str = "24h", settings: Settings | None = None, now: datetime |
     items = [Item(c, clean_headline(c.ann.headline, c.ann.symbol),
                   REASON_LABELS.get(c.reason.replace(" · on watchlist", ""), LABELS.get(c.category, c.category)),
                   c.category in settings.watch) for c in res]
+
+    ids = [i.a.id for i in items]
+    res_cards, mgmt_cards = enrich.get(ids, "results"), enrich.get(ids, "mgmt")
+    p1 = enrich.get(ids, "page1")
+    for i in items:
+        r, m = res_cards.get(i.a.id), mgmt_cards.get(i.a.id)
+        i.p1_summary = (p1.get(i.a.id) or {}).get("summary") or ""
+        if r:
+            i.results = cards.ResultsCard.from_json(r["card"]) if "card" in r else None
+            i.card_error = r.get("error", "")
+        if m:
+            i.mgmt = cards.MgmtCard.from_json(m["card"]) if "card" in m else None
+            i.card_error = i.card_error or m.get("error", "")
 
     need = _group([i for i in items if i.c.tier == "top"])
     for i in need[:3]:   # the highlighter marks what to read first, nothing else

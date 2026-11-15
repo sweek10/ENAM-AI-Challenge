@@ -8,6 +8,8 @@ from fastapi.templating import Jinja2Templates
 
 from finn import digest as D
 from finn import settings as S
+from finn import config
+from finn.cards import METRICS
 from finn.classify import CATEGORIES
 from finn.portfolio import BY_SYMBOL
 
@@ -41,6 +43,27 @@ def spark(values: list[float], w: int = 64, h: int = 18) -> str:
             f'<polyline points="{pts}"/><circle cx="{last_x}" cy="{last_y}" r="2"/></svg>')
 
 
+def money(x, unit: str | None = None) -> str:
+    """Indian digit grouping, as the filings print it: 1,45,463."""
+    if x is None:
+        return "not found"
+    neg, v = x < 0, abs(x)
+    whole, frac = f"{v:.0f}" if v >= 100 else f"{v:.1f}", ""
+    if "." in whole:
+        whole, frac = whole.split(".")
+        frac = "." + frac
+    if len(whole) > 3:
+        head, tail = whole[:-3], whole[-3:]
+        head = ",".join([head[max(0, i - 2):i] for i in range(len(head), 0, -2)][::-1])
+        whole = head + "," + tail
+    return ("\u2212" if neg else "") + whole + frac
+
+
+def linkedin_search(name: str, company: str) -> str:
+    from urllib.parse import quote
+    return "https://www.linkedin.com/search/results/people/?keywords=" + quote(f"{name} {company}")
+
+
 def pct(x: float, dp: int = 1) -> str:
     if abs(x) < 0.5 * 10 ** -dp:
         return f"{0:.{dp}f}%"
@@ -51,7 +74,9 @@ def tone(x: float) -> str:
     return "flat" if abs(x) < 0.05 else ("up" if x > 0 else "down")
 
 
-templates.env.globals.update(pct=pct, tone=tone, ago=ago, spark=spark, BY_SYMBOL=BY_SYMBOL, LABELS=D.LABELS)
+templates.env.filters["model_name"] = config.model_name
+templates.env.globals.update(money=money, linkedin_search=linkedin_search, METRICS=METRICS,
+                             model_name=config.model_name, pct=pct, tone=tone, ago=ago, spark=spark, BY_SYMBOL=BY_SYMBOL, LABELS=D.LABELS)
 
 
 @app.get("/", response_class=HTMLResponse)

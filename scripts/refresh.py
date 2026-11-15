@@ -12,7 +12,8 @@ import time
 from datetime import date, timedelta
 
 from finn import announcements as ann
-from finn import prices
+from finn import db, enrich, llm, prices
+from finn.announcements import Announcement
 from finn.portfolio import PORTFOLIO
 
 
@@ -20,6 +21,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--days", type=int, default=30)
     ap.add_argument("--no-nse", action="store_true")
+    ap.add_argument("--no-enrich", action="store_true", help="skip reading filing PDFs")
+    ap.add_argument("--enrich-days", type=int, default=7)
     args = ap.parse_args()
     logging.basicConfig(level=logging.WARNING)
 
@@ -36,6 +39,22 @@ def main():
               + (f"   ({'; '.join(r.errors)})" if r.errors else ""))
         if r.source in ("bse", "nse"):
             time.sleep(0.5)  # be polite to the exchanges
+
+    if args.no_enrich:
+        return
+    # Read filing PDFs once: page 1 of vague filings, results tables, appointment letters.
+    lo = (date.today() - timedelta(days=args.enrich_days)).isoformat()
+    with db.connect() as conn:
+        items = [Announcement(**dict(r)) for r in conn.execute("SELECT * FROM announcements WHERE dt >= ?", (lo,))]
+    client = llm.default_client()
+    if client is None:
+        print("\nANTHROPIC_API_KEY not set: page-1 reading of text PDFs only; no cards.")
+    st = enrich.run(items, client)
+    with db.connect() as conn:
+        spend = conn.execute("SELECT model, COUNT(*) n, SUM(cost_usd) usd FROM llm_usage GROUP BY model").fetchall()
+    print(f"\nenriched {len(items)} filings from the last {args.enrich_days} days: {st}")
+    for r in spend:
+        print(f"  {r['model']}: {r['n']} calls, ${r['usd']:.4f} all-time")
 
 
 if __name__ == "__main__":

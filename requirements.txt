@@ -8,3 +8,7 @@ uvicorn
 jinja2
 python-multipart
 httpx
+pypdf
+pypdfium2
+pillow
+reportlab

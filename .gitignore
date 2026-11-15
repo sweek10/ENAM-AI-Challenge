@@ -5,3 +5,4 @@ __pycache__/
 # raw HTTP cache is local-only; finn.sqlite and snapshots/ are committed for the demo
 data/cache/
 data_demo/
+samples/

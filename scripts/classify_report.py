@@ -91,7 +91,7 @@ def main():
     print(f"  unreviewed (no LLM)      {st['no_llm']:>5}  {pct(st['no_llm'])}")
     print(f"  -> handled without an LLM call this run: {rules + st['llm_cache']}/{n} ({pct(rules + st['llm_cache']).strip()})")
 
-    print(f"\n== LLM spend this run ({C.MODEL}{', FAKE client: tokens estimated' if args.fake_llm else ''}) ==")
+    print(f"\n== LLM spend this run ({config.CLASSIFY_MODEL}{', FAKE client: tokens estimated' if args.fake_llm else ''}) ==")
     print(f"  calls {st['llm_calls']}   input {st['input_tokens']:,} tok   output {st['output_tokens']:,} tok"
           f"   cost ${st['cost_usd']:.6f}")
     if st.get("llm_errors"):

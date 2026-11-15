@@ -156,7 +156,6 @@ def tier_of(s: int) -> str:
 
 # ---------- LLM ----------
 PROMPT_VERSION = "v1"
-MODEL = "claude-haiku-5-5"
 BATCH = 40
 
 SYSTEM = f"""You classify Indian stock-exchange corporate announcements.
@@ -202,7 +201,7 @@ def _default_client():
 def _llm_batch(client, items: list[Announcement]) -> tuple[dict[str, str], dict]:
     lines = [f"{i}|{a.category}|{a.subcategory}|{a.headline[:220]}" for i, a in enumerate(items)]
     resp = client.messages.create(
-        model=MODEL, max_tokens=16 + 12 * len(items), temperature=0, system=SYSTEM,
+        model=config.CLASSIFY_MODEL, max_tokens=16 + 12 * len(items), temperature=0, system=SYSTEM,
         messages=[{"role": "user", "content": "index|exchange_category|subcategory|headline\n" + "\n".join(lines)}],
     )
     text = "".join(getattr(b, "text", "") for b in resp.content)
@@ -219,11 +218,11 @@ def _llm_batch(client, items: list[Announcement]) -> tuple[dict[str, str], dict]
 
 
 def _log_usage(conn, purpose: str, n: int, usage: dict) -> None:
-    pin, pout = _price(MODEL)
+    pin, pout = _price(config.CLASSIFY_MODEL)
     cost = usage["input_tokens"] / 1e6 * pin + usage["output_tokens"] / 1e6 * pout
     conn.execute(
         "INSERT INTO llm_usage(ts,model,purpose,n_items,input_tokens,output_tokens,cost_usd) VALUES (?,?,?,?,?,?,?)",
-        (time.time(), MODEL, purpose, n, usage["input_tokens"], usage["output_tokens"], cost),
+        (time.time(), config.CLASSIFY_MODEL, purpose, n, usage["input_tokens"], usage["output_tokens"], cost),
     )
 
 
@@ -232,8 +231,8 @@ def classify(items: list[Announcement], prefs: Prefs | None = None, client="defa
     prefs = prefs or Prefs()
     if client == "default":
         client = _default_client()
-    stats = {"total": len(items), "rule:headline": 0, "rule:exchange_cat": 0, "llm_cache": 0,
-             "llm": 0, "no_llm": 0, "llm_calls": 0, "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0}
+    stats = {"total": len(items), "rule:headline": 0, "rule:exchange_cat": 0, "pdf:page1": 0, "llm_cache": 0,
+             "llm": 0, "no_llm": 0, "llm_calls": 0, "models": set(), "input_tokens": 0, "output_tokens": 0, "cost_usd": 0.0}
 
     labelled: dict[str, tuple[str, str, str]] = {}  # id -> (category, method, rule)
     pending: list[Announcement] = []
@@ -249,11 +248,25 @@ def classify(items: list[Announcement], prefs: Prefs | None = None, client="defa
         pending.append(a)
 
     with db.connect() as conn:
+        if pending:  # page 1 of the PDF already read by the enrichment step?
+            conn.execute("CREATE TABLE IF NOT EXISTS enrich (id TEXT NOT NULL, kind TEXT NOT NULL, data TEXT NOT NULL,"
+                         " ts REAL NOT NULL, PRIMARY KEY (id, kind))")
+            q = ",".join("?" * len(pending))
+            for r in conn.execute(f"SELECT id, data FROM enrich WHERE kind='page1' AND id IN ({q})",
+                                  [a.id for a in pending]):
+                d = json.loads(r["data"])
+                if d.get("category"):
+                    labelled[r["id"]] = (d["category"], "pdf:page1", d.get("method", ""))
+                    if d.get("method") == "pdf_image_llm":
+                        stats["models"].add(config.CLASSIFY_MODEL)
+            pending = [a for a in pending if a.id not in labelled]
         if pending:
             q = ",".join("?" * len(pending))
-            cached = {r["id"]: r["category"] for r in conn.execute(
-                f"SELECT id, category FROM llm_labels WHERE prompt_version=? AND id IN ({q})",
-                [PROMPT_VERSION, *[a.id for a in pending]])}
+            rows = conn.execute(
+                f"SELECT id, category, model FROM llm_labels WHERE prompt_version=? AND id IN ({q})",
+                [PROMPT_VERSION, *[a.id for a in pending]]).fetchall()
+            cached = {r["id"]: r["category"] for r in rows}
+            stats["models"].update(r["model"] for r in rows)
             for a in pending:
                 if a.id in cached:
                     labelled[a.id] = (cached[a.id], "llm_cache", "")
@@ -269,6 +282,7 @@ def classify(items: list[Announcement], prefs: Prefs | None = None, client="defa
                     stats.setdefault("llm_errors", []).append(f"{type(e).__name__}: {e}")
                 else:
                     stats["llm_calls"] += 1
+                    stats["models"].add(config.CLASSIFY_MODEL)
                     _log_usage(conn, "classify", len(chunk), usage)
                 stats["input_tokens"] += usage["input_tokens"]
                 stats["output_tokens"] += usage["output_tokens"]
@@ -277,9 +291,9 @@ def classify(items: list[Announcement], prefs: Prefs | None = None, client="defa
                         labelled[a.id] = (labels[a.id], "llm", "")
                         conn.execute(
                             "INSERT OR REPLACE INTO llm_labels(id,category,model,prompt_version,ts) VALUES (?,?,?,?,?)",
-                            (a.id, labels[a.id], MODEL, PROMPT_VERSION, time.time()))
+                            (a.id, labels[a.id], config.CLASSIFY_MODEL, PROMPT_VERSION, time.time()))
 
-    pin, pout = _price(MODEL)
+    pin, pout = _price(config.CLASSIFY_MODEL)
     stats["cost_usd"] = stats["input_tokens"] / 1e6 * pin + stats["output_tokens"] / 1e6 * pout
 
     out = []
@@ -292,4 +306,5 @@ def classify(items: list[Announcement], prefs: Prefs | None = None, client="defa
             s, why = score(cat, f"{a.headline} | {a.category} | {a.subcategory}", prefs)
         out.append(Classified(a, cat, method, rule, s, tier_of(s), why))
     out.sort(key=lambda c: (c.score, c.ann.dt), reverse=True)
+    stats["models"] = sorted(stats["models"])
     return out, stats
