@@ -53,9 +53,17 @@ an OCR'd scan with a different column order, and a scan whose text runs column b
 
 ## Known limits (honest list)
 
-- **Pull-side recall is low.** Rules only catch guidance phrased as a number with a period. On KPIT's last four
-  calls they found nothing checkable; on Maruti, one ("growth of over 10% this year", 30.7% so far, on track).
-  Much guidance is qualitative, in constant currency, or about a segment. This is where a model would help.
+- **Pull-side recall is low; precision came first.** Across the portfolio plus KPIT (16 companies, last four
+  calls each) the rules produce **two** checked verdicts, both on L&T and both right: FY26 revenue growth guided at
+  15%, delivered 11.8% (*missed*; L&T's next call says "12% compared to our guidance of 15%"), and FY27 guided at
+  10–12%, 11.4% so far (*on track*). Everything else is *unclear*. Earlier rule versions produced confident wrong
+  verdicts (loan-book growth, order inflow and one segment's margin compared with company revenue); those cases are
+  now regression tests. Most guidance is qualitative, segment-level or in constant currency. This is where a model
+  would help, with the code still doing the comparison.
+- **Results cards** are complete for 7 of 15 companies (TCS, ITC, Dixon, L&T, Bajaj Finance, Persistent, Tata Steel),
+  partial for Trent, and "not found" for the rest (Reliance's and Eternal's layouts, HDFC Bank's bank format, HAL's
+  image-only PDF). A page only counts as the statement if it has revenue, a profit line and most other rows: an
+  early version read Maruti's revenue as 55 from a highlights page.
 - Image-only PDFs with no text layer show "not found" with a link to the filing.
 - Banks: no "revenue from operations" line, so results cards show "not found" for revenue; NIM guidance is unclear.
 - Derived EBITDA can differ from the EBITDA a company quotes (Dixon: 599.63 derived vs 666 in its press release).
@@ -75,7 +83,7 @@ python3 -m venv .venv && .venv/bin/python -m pip install -r requirements.txt
 .venv/bin/python -m scripts.refresh --days 45 --enrich-days 45     # prices, filings, results/management cards
 .venv/bin/python -m scripts.fetch_transcripts KPITTECH --portfolio # transcripts + saved research pages
 .venv/bin/uvicorn app:app --reload                                  # http://127.0.0.1:8000
-.venv/bin/python -m pytest                                          # 166 tests; add --live to hit the real sources
+.venv/bin/python -m pytest                                          # 176 tests; add --live to hit the real sources
 ```
 
 Other scripts: `scripts.verify_cards` (re-runs the parsers on the real filings and saves the pages read),
