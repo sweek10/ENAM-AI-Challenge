@@ -23,6 +23,23 @@ CREATE TABLE IF NOT EXISTS announcements (
     source      TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS ix_ann_symbol_dt ON announcements(symbol, dt);
+CREATE TABLE IF NOT EXISTS llm_labels (
+    id             TEXT NOT NULL,     -- announcement id
+    category       TEXT NOT NULL,
+    model          TEXT NOT NULL,
+    prompt_version TEXT NOT NULL,
+    ts             REAL NOT NULL,
+    PRIMARY KEY (id, prompt_version)
+);
+CREATE TABLE IF NOT EXISTS llm_usage (
+    ts            REAL NOT NULL,
+    model         TEXT NOT NULL,
+    purpose       TEXT NOT NULL,
+    n_items       INTEGER NOT NULL,
+    input_tokens  INTEGER NOT NULL,
+    output_tokens INTEGER NOT NULL,
+    cost_usd      REAL NOT NULL
+);
 CREATE TABLE IF NOT EXISTS fetch_log (
     source     TEXT NOT NULL,
     key        TEXT NOT NULL,

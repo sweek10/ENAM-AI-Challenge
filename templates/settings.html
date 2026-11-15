@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% set active = 'settings' %}
+{% block title %}Settings · FINN{% endblock %}
+{% block head %}
+<style>
+h1{font-size:28px; font-stretch:88%; font-weight:780; margin:0 0 6px}
+.lede{color:var(--slate); margin:0 0 24px}
+fieldset{border:0; margin:0 0 22px; padding:0}
+legend{font-weight:700; font-size:15px; margin-bottom:10px; padding:0}
+.sheet{background:var(--sheet); border-radius:var(--r-sheet); padding:4px 14px}
+.field{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 0}
+.field + .field{border-top:1px solid var(--faint)}
+.field label{font-size:15px}
+.field small{display:block; color:var(--slate); font-size:12.5px}
+.stepper{display:flex; align-items:center; border:1px solid var(--faint); border-radius:10px; overflow:hidden}
+.stepper button{all:unset; cursor:pointer; width:36px; height:36px; text-align:center; font-size:18px; color:var(--slate)}
+.stepper button:focus-visible{outline:2px solid var(--focus)}
+.stepper input{width:56px; border:0; text-align:center; font:inherit; font-weight:650; background:transparent; color:var(--ink);
+               -moz-appearance:textfield}
+.stepper input::-webkit-inner-spin-button{-webkit-appearance:none}
+.cat{display:flex; align-items:center; justify-content:space-between; gap:10px; padding:9px 0}
+.cat + .cat{border-top:1px solid var(--faint)}
+.seg{display:flex; border:1px solid var(--faint); border-radius:var(--r-chip); overflow:hidden; flex-shrink:0}
+.seg input{position:absolute; opacity:0; pointer-events:none}
+.seg label{font-size:12.5px; padding:6px 10px; cursor:pointer; color:var(--slate)}
+.seg input:checked + label{background:var(--ink); color:var(--paper); font-weight:600}
+.seg input:focus-visible + label{outline:2px solid var(--focus); outline-offset:-2px}
+.save{position:sticky; bottom:max(12px, env(safe-area-inset-bottom)); width:100%; padding:14px; border:0; border-radius:12px; font:inherit; font-weight:700;
+      background:var(--ink); color:var(--paper); cursor:pointer; margin-top:8px}
+.toast{background:var(--mark); color:#15213A; border-radius:10px; padding:8px 12px; font-size:14px; margin-bottom:16px; font-weight:600}
+</style>
+{% endblock %}
+{% block body %}
+{% if saved %}<p class="toast" role="status">Settings saved. Your digest uses them now.</p>{% endif %}
+<h1>What counts as unusual</h1>
+<p class="lede">FINN checks every stock against these at each end-of-day close.</p>
+<form method="post" action="/settings">
+  <fieldset>
+    <legend>Price and volume alerts</legend>
+    <div class="sheet">
+      {% macro step(name, val, stepv, minv, maxv, label, hint) %}
+      <div class="field">
+        <label for="{{ name }}">{{ label }}<small>{{ hint }}</small></label>
+        <div class="stepper">
+          <button type="button" aria-label="Decrease" onclick="this.nextElementSibling.stepDown();">−</button>
+          <input id="{{ name }}" name="{{ name }}" type="number" inputmode="decimal" value="{{ '%g'|format(val) }}" step="{{ stepv }}" min="{{ minv }}" max="{{ maxv }}">
+          <button type="button" aria-label="Increase" onclick="this.previousElementSibling.stepUp();">+</button>
+        </div>
+      </div>
+      {% endmacro %}
+      {{ step('price_move_pct', s.price_move_pct, 0.5, 0.5, 20, 'Day move, %', 'Alert when a stock closes this far up or down') }}
+      {{ step('volume_multiple', s.volume_multiple, 0.5, 1.5, 10, 'Volume spike, ×', 'Alert when volume is this many times its average') }}
+      {{ step('volume_lookback', s.volume_lookback, 5, 5, 60, 'Average over, days', 'Trading days used for the volume average') }}
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Filing types</legend>
+    <p class="lede" style="margin:-4px 0 10px; font-size:13.5px">Watched types rank higher in your digest. Muted types are hidden.</p>
+    <div class="sheet">
+      {% for c in categories %}{% set state = 'watch' if c in s.watch else ('mute' if c in s.mute else 'normal') %}
+      <div class="cat">
+        <span>{{ LABELS[c] }}</span>
+        <div class="seg" role="radiogroup" aria-label="{{ LABELS[c] }}">
+          {% for v, lab in [('watch','Watch'),('normal','Normal'),('mute','Mute')] %}
+          <input type="radio" id="c_{{ loop.index }}_{{ c|replace('&','') }}" name="cat_{{ c }}" value="{{ v }}" {% if state == v %}checked{% endif %}>
+          <label for="c_{{ loop.index }}_{{ c|replace('&','') }}">{{ lab }}</label>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </fieldset>
+  <button class="save" type="submit">Save settings</button>
+</form>
+{% endblock %}

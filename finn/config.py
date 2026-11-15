@@ -35,3 +35,11 @@ def snapshot_dir() -> Path:
     d = data_dir() / "snapshots" / "announcements"
     d.mkdir(parents=True, exist_ok=True)
     return d
+
+# USD per million tokens (input, output), Claude API list prices, Nov 2026.
+# Haiku 5.5 rate is for prompts <=100K tokens (our classify batches are ~2-3K).
+MODEL_PRICES_PER_MTOK = {
+    "claude-haiku-5-5": (0.10, 0.50),
+    "claude-sonnet-5-5": (2.00, 10.00),
+    "claude-opus-5-5": (4.00, 20.00),
+}

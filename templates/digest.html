@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+{% set active = 'digest' %}
+{% block head %}
+<style>
+.win{display:flex; gap:6px; margin-bottom:26px}
+.win a{flex:1; text-align:center; text-decoration:none; font-size:14px; padding:7px 0;
+       border-radius:var(--r-chip); color:var(--slate); background:transparent; border:1px solid var(--faint)}
+.win a[aria-current]{background:var(--ink); color:var(--paper); border-color:var(--ink); font-weight:600}
+
+/* hero: the filtering outcome, said plainly */
+.hero{margin:0 0 6px; font-size:40px; line-height:1.02; font-weight:780; font-stretch:88%; letter-spacing:-.01em}
+.hero .n{font-stretch:100%}
+.sub{margin:0 0 30px; color:var(--slate); font-size:15px; max-width:44ch}
+
+h2{font-size:15px; font-weight:700; margin:30px 0 10px; display:flex; justify-content:space-between; align-items:baseline}
+h2 a, h2 span{font-weight:400; font-size:13px; color:var(--slate)}
+
+/* alerts: one tight row each, the number is the point */
+.alerts{background:var(--sheet); border-radius:var(--r-sheet); padding:4px 14px}
+.al{display:grid; grid-template-columns:minmax(70px,auto) 1fr auto auto; align-items:center; gap:10px;
+    padding:10px 0; text-decoration:none}
+.al + .al{border-top:1px solid var(--faint)}
+.spark polyline{fill:none; stroke:var(--slate); stroke-width:1.4}
+.spark circle{fill:var(--ink)}
+.al .chg{font-weight:700; font-size:16px; min-width:58px; text-align:right}
+.al .vol{font-size:13px; color:var(--slate); min-width:62px; text-align:right}
+.al .vol.hit{color:var(--ink); font-weight:700}
+.al .chg.quiet{color:var(--slate); font-weight:500}
+.flat{color:var(--slate)}
+
+/* need-you: the only place the highlighter is used */
+.card{background:var(--sheet); border-radius:var(--r-sheet); padding:14px 14px 12px; margin-bottom:10px}
+.row1{display:flex; align-items:baseline; gap:8px}
+.row1 .move{margin-left:auto; font-size:13px; white-space:nowrap}
+.title{font-size:17px; font-weight:620; line-height:1.3; margin:6px 0 8px}
+.hl{background:linear-gradient(transparent 52%, var(--mark) 52%, var(--mark) 92%, transparent 92%);
+    box-decoration-break:clone; -webkit-box-decoration-break:clone; padding:0 2px}
+.meta{display:flex; flex-wrap:wrap; gap:4px 12px; font-size:13px; color:var(--slate)}
+.tag{color:var(--ink); font-weight:600}
+.meta a{color:var(--slate)}
+.rel{margin-top:10px; font-size:13px}
+.rel summary{cursor:pointer; color:var(--slate); list-style:none}
+.rel summary::-webkit-details-marker{display:none}
+.rel summary::before{content:"+ "; font-weight:700}
+.rel[open] summary::before{content:"– "}
+.rel ul{margin:6px 0 0; padding:0 0 0 14px}
+.rel li{margin:3px 0}
+
+/* notable: list density, no card chrome */
+.list{background:var(--sheet); border-radius:var(--r-sheet); padding:2px 14px}
+.li{display:grid; grid-template-columns:6.6em 1fr; gap:2px 10px; padding:10px 0}
+.li + .li{border-top:1px solid var(--faint)}
+.li .tk{font-size:14px; padding-top:2px; overflow-wrap:anywhere}
+.li .t{font-size:15px; font-weight:520}
+.li .m{grid-column:2; font-size:12.5px; color:var(--slate)}
+
+/* folds */
+.fold{background:var(--sheet); border-radius:var(--r-sheet); margin-bottom:6px}
+.fold > summary{display:flex; gap:10px; align-items:baseline; padding:11px 14px; cursor:pointer; list-style:none}
+.fold > summary::-webkit-details-marker{display:none}
+.fold > summary .what{color:var(--slate); font-size:13px; flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.fold > summary .count{font-size:13px; color:var(--slate)}
+.fold-body{padding:0 14px 10px}
+.fold-body .li{grid-template-columns:1fr}
+.fold-body .li .m{grid-column:1}
+
+.empty{background:var(--sheet); border-radius:var(--r-sheet); padding:18px; color:var(--slate)}
+footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
+</style>
+{% endblock %}
+{% block body %}
+{% set ref = d.end %}
+{% if d.demo %}<p class="demo">Demo data for layout only. Run <code>python -m scripts.refresh</code> to load real filings.</p>{% endif %}
+
+<nav class="win" aria-label="Time window">
+  {% for w in windows %}<a href="/?window={{ w }}" {% if w == d.window %}aria-current="true"{% endif %}>{{ w }}</a>{% endfor %}
+</nav>
+
+{% set nn = d.need_you|length %}
+<h1 class="hero">
+  {% if nn == 0 %}Nothing needs you{% elif nn == 1 %}<span class="n">1</span> filing needs you{% else %}<span class="n">{{ nn }}</span> filings need you{% endif %}
+  {%- if d.alerts %}, <span class="n">{{ d.alerts|length }}</span> stock{{ 's' if d.alerts|length > 1 }} moved{% endif %}.
+</h1>
+{% set rcount = d.routine.values()|map('length')|sum %}
+<p class="sub">
+  {% if d.total == 0 %}No filings across your 15 stocks in this window.
+  {% else %}{{ d.notable|length }} worth a look, {{ rcount }} routine folded and {{ d.hidden|length }} paperwork hidden, out of {{ d.total }} filings{% endif %}
+  {%- set hrs = {'24h':'the last 24 hours','3d':'the last 3 days','7d':'the last week','30d':'the last 30 days'} %} in {{ hrs[d.window] }}.
+</p>
+
+{% if d.alerts %}
+<h2>Moved past your limits <a href="/settings">±{{ '%g'|format(s.price_move_pct) }}% or {{ '%g'|format(s.volume_multiple) }}× volume</a></h2>
+<div class="alerts">
+  {% for a in d.alerts %}{% set m = a.move %}
+  <div class="al">
+    <span><span class="tk">{{ m.symbol }}</span></span>
+    {{ spark(m.spark)|safe }}
+    <span class="chg {{ tone(m.change_pct) if 'price' in a.kinds else 'quiet' }}">{{ pct(m.change_pct) }}</span>
+    <span class="vol{{ ' hit' if 'volume' in a.kinds else '' }}">{% if m.vol_multiple %}{{ '%.1f'|format(m.vol_multiple) }}× vol{% else %}–{% endif %}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% macro move_chip(sym) -%}
+  {%- set m = d.moves.get(sym) -%}
+  {%- if m -%}<span class="move"><span class="num {{ tone(m.change_pct) }}">{{ pct(m.change_pct) }}</span>{% if m.vol_multiple and m.vol_multiple >= 1.5 %}<span class="muted">, {{ '%.1f'|format(m.vol_multiple) }}× vol</span>{% endif %}</span>{%- endif -%}
+{%- endmacro %}
+
+{% if d.need_you %}
+<h2>Needs you</h2>
+{% for i in d.need_you %}
+<article class="card">
+  <div class="row1"><span class="tk">{{ i.a.symbol }}</span>{% set nm = BY_SYMBOL[i.a.symbol].name if i.a.symbol in BY_SYMBOL else '' %}{% if nm|upper != i.a.symbol %}<span class="co">{{ nm }}</span>{% endif %}{{ move_chip(i.a.symbol) }}</div>
+  <p class="title"><span class="{{ 'hl' if i.first }}">{{ i.title }}</span></p>
+  <div class="meta">
+    <span class="tag">{{ i.label }}</span><span>{{ ago(i.a.dt, ref) }}</span>{% if i.why %}<span>{{ i.why }}</span>{% endif %}
+    {% if i.a.pdf_url %}<a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open filing</a>{% endif %}
+  </div>
+  {% if i.related %}
+  <details class="rel"><summary>{{ i.related|length }} more from {{ i.a.symbol }} that day</summary>
+    <ul>{% for r in i.related %}<li>{{ r.title }} <span class="muted">({{ r.label }})</span>{% if r.a.pdf_url %} <a class="muted" href="{{ r.a.pdf_url }}" target="_blank" rel="noopener">filing</a>{% endif %}</li>{% endfor %}</ul>
+  </details>
+  {% endif %}
+</article>
+{% endfor %}
+{% endif %}
+
+{% if d.notable %}
+<h2>Worth a look <span>{{ d.notable|length }}</span></h2>
+<div class="list">
+  {% for i in d.notable %}
+  <div class="li">
+    <span class="tk">{{ i.a.symbol }}</span>
+    <span class="t">{% if i.a.pdf_url %}<a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener" style="text-decoration:none">{{ i.title }}</a>{% else %}{{ i.title }}{% endif %}</span>
+    <span class="m">{{ i.label }}, {{ ago(i.a.dt, ref) }}{% if i.related %}, +{{ i.related|length }} related{% endif %}</span>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
+{% if d.routine %}
+<h2>Routine, folded by company <span>{{ rcount }}</span></h2>
+{% for sym, its in d.routine.items() %}
+<details class="fold">
+  <summary><span class="tk" style="font-size:15px">{{ sym }}</span>
+    <span class="what">{{ its|map(attribute='label')|unique|join(', ') }}</span>
+    <span class="count">{{ its|length }}</span></summary>
+  <div class="fold-body">
+    {% for i in its %}<div class="li"><span class="t">{{ i.title }}</span><span class="m">{{ i.label }}, {{ ago(i.a.dt, ref) }}</span></div>{% endfor %}
+  </div>
+</details>
+{% endfor %}
+{% endif %}
+
+{% if d.hidden %}
+<details class="fold" style="margin-top:14px">
+  <summary><span class="what">Paperwork hidden: trading windows, certificates, ESOP allotments, newspaper ads</span><span class="count">{{ d.hidden|length }}</span></summary>
+  <div class="fold-body">
+    {% for i in d.hidden %}<div class="li"><span class="t"><span class="tk" style="font-size:14px">{{ i.a.symbol }}</span> {{ i.title }}</span><span class="m">{{ i.label }}, {{ ago(i.a.dt, ref) }}</span></div>{% endfor %}
+  </div>
+</details>
+{% endif %}
+
+{% if d.total == 0 %}
+<div class="empty">Quiet window. {% if d.window != '30d' %}<a href="/?window={{ '3d' if d.window == '24h' else ('7d' if d.window == '3d' else '30d') }}">Look further back</a>{% endif %}</div>
+{% endif %}
+
+<footer>
+  {% set st = d.stats %}
+  Sorted {{ st['rule:headline'] + st['rule:exchange_cat'] }} of {{ d.total }} by rules{% if st['llm'] or st['llm_cache'] %}, {{ st['llm'] + st['llm_cache'] }} by Haiku{% endif %}{% if st['no_llm'] %}, {{ st['no_llm'] }} unreviewed{% endif %}.
+  {% if st['cost_usd'] %}This view cost ${{ '%.5f'|format(st['cost_usd']) }}.{% endif %}
+  Prices are end of day{% if d.moves %}, last close {{ (d.moves.values()|list)[0].date }}{% endif %}.
+  {% if d.source == 'snapshot' %}Filings from saved snapshot.{% endif %}
+</footer>
+{% endblock %}
