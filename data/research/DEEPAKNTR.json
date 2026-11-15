@@ -1,0 +1,136 @@
+{
+ "ticker": "DEEPAKNTR",
+ "name": "Deepak Nitrite Ltd",
+ "screener_url": "https://www.screener.in/company/DEEPAKNTR/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Nov 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/5dfbdab4-d040-4a99-b694-bbe26f015f14.pdf"
+  },
+  {
+   "label": "Aug 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/830edde9-d00b-4243-98bd-a0e7c77d716b.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/589629dc-be30-42d5-8ed4-bb605071a9bc.pdf"
+  },
+  {
+   "label": "Feb 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/5fe2e422-45bb-44a8-a6e2-c9677c942a8d.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY28",
+   "basis": "inr",
+   "target": "14\u201315%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 14.0,
+     "high": 15.0,
+     "unit": "%",
+     "period": "FY28",
+     "basis": "inr",
+     "quote": "So just for clarification, we are estimating that in the next year, with all the assets that have been commissioned running at steady-state, we should be targeting something along the lines of about 14% to 15% EBIT.",
+     "speaker": "Maulik Mehta",
+     "call": "Nov 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/5dfbdab4-d040-4a99-b694-bbe26f015f14.pdf",
+     "score": 2,
+     "target": "14\u201315%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "60%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 60.0,
+     "high": 60.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "I don't anticipate that it affects every single one of our products, maybe many of our products, 60%, 70% of our products are not as directly affected by Chinese oversupply.",
+     "speaker": "Maulik Mehta",
+     "call": "Feb 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/5fe2e422-45bb-44a8-a6e2-c9677c942a8d.pdf",
+     "score": 0,
+     "target": "60%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 2,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 1890.0,
+   "yoy": -12.782648823257958,
+   "opm": 10.052910052910052,
+   "pat": 112.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 1902.0,
+   "yoy": -6.397637795275591,
+   "opm": 10.725552050473187,
+   "pat": 119.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 1975.0,
+   "yoy": 3.7834997372569568,
+   "opm": 10.683544303797468,
+   "pat": 100.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 2120.0,
+   "yoy": -2.752293577981646,
+   "opm": 17.735849056603772,
+   "pat": 220.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 2578.0,
+   "yoy": 36.40211640211639,
+   "opm": 20.946470131885185,
+   "pat": 345.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 3076.0,
+   "yoy": 61.72450052576235,
+   "opm": 20.38361508452536,
+   "pat": 398.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

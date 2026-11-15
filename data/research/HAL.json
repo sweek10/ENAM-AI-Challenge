@@ -1,0 +1,346 @@
+{
+ "ticker": "HAL",
+ "name": "Hindustan Aeronautics Ltd",
+ "screener_url": "https://www.screener.in/company/HAL/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/344500e7-2fff-4cc6-a792-c4693e0340f6.pdf"
+  },
+  {
+   "label": "May 2025",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94da53ef-52aa-4fdd-8cc2-9dcf291a112d.pdf"
+  },
+  {
+   "label": "May 2024",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7425b322-7f3d-4b7c-bc63-a61673475a4f.pdf"
+  },
+  {
+   "label": "May 2023",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/2560c6fe-eba7-48fd-85e2-8458df6f6b4d.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "revenue_growth",
+   "label": "Revenue growth",
+   "period": null,
+   "basis": "inr",
+   "target": "7\u20138%",
+   "trail": [
+    {
+     "metric": "revenue_growth",
+     "low": 9.37,
+     "high": 9.37,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "So that we coul d achieve a revenue target of growth of 9.37% in the last financial year.",
+     "speaker": "C.B. Ananthakrishnan",
+     "call": "May 2023",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/2560c6fe-eba7-48fd-85e2-8458df6f6b4d.pdf",
+     "score": 1,
+     "target": "9.37%",
+     "change": null
+    },
+    {
+     "metric": "revenue_growth",
+     "low": 7.0,
+     "high": 8.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "And revenue growth, the guidance is 7% to 8%, whatever is there, we will try to continue with that.",
+     "speaker": "Barenya Senapati",
+     "call": "May 2025",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94da53ef-52aa-4fdd-8cc2-9dcf291a112d.pdf",
+     "score": 4,
+     "target": "7\u20138%",
+     "change": "cut"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "No period stated."
+  },
+  {
+   "metric": "margin",
+   "label": "Operating margin",
+   "period": null,
+   "basis": "inr",
+   "target": "30%",
+   "trail": [
+    {
+     "metric": "margin",
+     "low": 12.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Beyond FY '25, we will be improving the dou ble-digit margins to 12%.",
+     "speaker": "C.B. Ananthakrishnan",
+     "call": "May 2023",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/2560c6fe-eba7-48fd-85e2-8458df6f6b4d.pdf",
+     "score": 1,
+     "target": "12%",
+     "change": null
+    },
+    {
+     "metric": "margin",
+     "low": 32.0,
+     "high": 33.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Broadly what we expect the EBITDA margins should on the most op timistic note it could be somewhere\u2014around 32% to 33%.",
+     "speaker": "C.B. Ananthakrishnan",
+     "call": "May 2024",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7425b322-7f3d-4b7c-bc63-a61673475a4f.pdf",
+     "score": 2,
+     "target": "32\u201333%",
+     "change": "raised"
+    },
+    {
+     "metric": "margin",
+     "low": 38.0,
+     "high": 39.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "The EBITDA margin we will be maintaining, s ee our EBITDA margin is around 38%-39%, and if you remove the interest income, so EBITD A will be around 31%.",
+     "speaker": "Barenya Senapati",
+     "call": "May 2025",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94da53ef-52aa-4fdd-8cc2-9dcf291a112d.pdf",
+     "score": 2,
+     "target": "38\u201339%",
+     "change": "raised"
+    },
+    {
+     "metric": "margin",
+     "low": 30.0,
+     "high": 30.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "And the EBITDA ma rgin, we have always maintained around 30%, 31%, and it will be maintained.",
+     "speaker": "Barenya Senapati",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/344500e7-2fff-4cc6-a792-c4693e0340f6.pdf",
+     "score": 1,
+     "target": "30%",
+     "change": "cut"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "No period stated."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "10\u201312%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": null,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "In fact, our initial guidance, we have always b een maintaining at 8% and we said that we will reach a double-digit growth from '24-'25 onwa rds.",
+     "speaker": "C.B. Ananthakrishnan",
+     "call": "May 2023",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/2560c6fe-eba7-48fd-85e2-8458df6f6b4d.pdf",
+     "score": 3,
+     "target": "\u226510%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": null,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "We have given our guidance last year for achieving a double-digit growth from FY2 4-25 onwards upon the Hindustan Aeronautics Limited May 17, 2024 Page 3 of 18 commencement of the delivery of LCA aircraft against the 83 LCA programs.",
+     "speaker": "C.B. Ananthakrishnan",
+     "call": "May 2024",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7425b322-7f3d-4b7c-bc63-a61673475a4f.pdf",
+     "score": 3,
+     "target": "\u226510%",
+     "change": "kept"
+    },
+    {
+     "metric": "other",
+     "low": 8.0,
+     "high": 10.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "What guidance we can give you is around 8% to 10%.",
+     "speaker": "Barenya Senapati",
+     "call": "May 2025",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94da53ef-52aa-4fdd-8cc2-9dcf291a112d.pdf",
+     "score": 3,
+     "target": "8\u201310%",
+     "change": "cut"
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Sir, my question is on the number of deliveries that we are expecting and the guidance that is there, because we are expecting around 20 plus HTT- 40, then we are also expecting LCA to go, then the guidance of 10% to 12%.",
+     "speaker": "Ravi Kota",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/344500e7-2fff-4cc6-a792-c4693e0340f6.pdf",
+     "score": 3,
+     "target": "10\u201312%",
+     "change": "raised"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY27",
+   "basis": "inr",
+   "target": "10\u201312%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": null,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "But the guidance is 8%-10%, and it may so happen a double-digit growth from next year onwards.",
+     "speaker": "Barenya Senapati",
+     "call": "May 2025",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/94da53ef-52aa-4fdd-8cc2-9dcf291a112d.pdf",
+     "score": 4,
+     "target": "\u226510%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "Management: When we tell 10% to 12%, then hopefully, we have taken all these things into account while we conclude our revenue target for the current financial year.",
+     "speaker": "Ravi Kota",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/344500e7-2fff-4cc6-a792-c4693e0340f6.pdf",
+     "score": 2,
+     "target": "10\u201312%",
+     "change": "raised"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY25",
+   "basis": "inr",
+   "target": "23%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 23.0,
+     "high": 23.0,
+     "unit": "%",
+     "period": "FY25",
+     "basis": "inr",
+     "quote": "The manpower cost which used to be around 23% of the revenue during the year 2018-19, some 5 years back, has consistently been rationalized to almost 17% during the last financial year i.e. \u201823-24 and we expected to bring it down to further to 16% of revenue in the current financial year.",
+     "speaker": "C.B. Ananthakrishnan",
+     "call": "May 2024",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7425b322-7f3d-4b7c-bc63-a61673475a4f.pdf",
+     "score": 1,
+     "target": "23%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 5,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 4819.0,
+   "yoy": 10.832566697332101,
+   "opm": 26.60302967420627,
+   "pat": 1384.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 6629.0,
+   "yoy": 10.92704149933066,
+   "opm": 23.502790767838285,
+   "pat": 1669.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 7699.0,
+   "yoy": 10.665516745723735,
+   "opm": 24.301857384075852,
+   "pat": 1867.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 13942.0,
+   "yoy": 1.7664233576642374,
+   "opm": 36.28604217472385,
+   "pat": 4196.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 5515.0,
+   "yoy": 14.44283046275161,
+   "opm": 27.688123300090663,
+   "pat": 1590.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 7613.0,
+   "yoy": 14.84386785337155,
+   "opm": 22.842506239327466,
+   "pat": 1936.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

@@ -1,0 +1,136 @@
+{
+ "ticker": "HDFCBANK",
+ "name": "HDFC Bank Ltd",
+ "screener_url": "https://www.screener.in/company/HDFCBANK/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Oct 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d7e45614-ae12-4bb9-b92d-623b3a63f166.pdf"
+  },
+  {
+   "label": "Jul 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/509cc499-6cb1-4d9f-8de9-9c7de6c70eef.pdf"
+  },
+  {
+   "label": "Apr 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a77abbbb-954a-4221-8240-67bf0da6ba1c.pdf"
+  },
+  {
+   "label": "Mar 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/56739132-e21e-4503-aeb6-85f4f53c1244.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY26",
+   "basis": "inr",
+   "target": "10.5\u201311.5%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.5,
+     "high": 11.5,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "At least if you see through large part of FY26, the nominal GDP growth expected was somewhere around the 9%, 9.5%, so one consensus until the large part of the year was a system credit growth of around 10.5% to 11.5%.",
+     "speaker": "Sashidhar Jagdishan",
+     "call": "Apr 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a77abbbb-954a-4221-8240-67bf0da6ba1c.pdf",
+     "score": 2,
+     "target": "10.5\u201311.5%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "12%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 12.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "This is what we had expected, and we calibrated our strategies and our growth in line with that, and that is why we grew at 12%.",
+     "speaker": "Sashidhar Jagdishan",
+     "call": "Apr 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a77abbbb-954a-4221-8240-67bf0da6ba1c.pdf",
+     "score": 0,
+     "target": "12%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 2,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 87372.0,
+   "yoy": 7.14443381649621,
+   "opm": null,
+   "pat": 17090.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 86994.0,
+   "yoy": 4.809522662104526,
+   "opm": null,
+   "pat": 20364.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 87067.0,
+   "yoy": 2.3835841956726167,
+   "opm": null,
+   "pat": 20691.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 87182.0,
+   "yoy": 0.46439806865716804,
+   "opm": null,
+   "pat": 21074.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 90575.0,
+   "yoy": 3.6659341665522094,
+   "opm": null,
+   "pat": 20383.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 95132.0,
+   "yoy": 9.354668138032519,
+   "opm": null,
+   "pat": 21537.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

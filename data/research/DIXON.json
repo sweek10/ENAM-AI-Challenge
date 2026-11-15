@@ -1,0 +1,286 @@
+{
+ "ticker": "DIXON",
+ "name": "Dixon Technologies (India) Ltd",
+ "screener_url": "https://www.screener.in/company/DIXON/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Nov 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/995a3a71-4a1e-4c1f-a29a-6c6747e4ca10.pdf"
+  },
+  {
+   "label": "Aug 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7ce2ca16-3043-48f4-97f9-a62a6a086c2f.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/38b72f07-55a6-4503-91fd-ed3b2c209e96.pdf"
+  },
+  {
+   "label": "Feb 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/ad6e72f1-b5f8-4a75-8e45-f2e88c7525e0.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "revenue_growth",
+   "label": "Revenue growth",
+   "period": null,
+   "basis": "inr",
+   "target": "12\u201315%",
+   "trail": [
+    {
+     "metric": "revenue_growth",
+     "low": 12.0,
+     "high": 15.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "So we expect Pankaj to -- that the revenue growth should be at least 12% to 15% higher, if not more.",
+     "speaker": "Saurabh Gupta",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/38b72f07-55a6-4503-91fd-ed3b2c209e96.pdf",
+     "score": 2,
+     "target": "12\u201315%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "No period stated."
+  },
+  {
+   "metric": "margin",
+   "label": "Operating margin",
+   "period": null,
+   "basis": "inr",
+   "target": "2.3%",
+   "trail": [
+    {
+     "metric": "margin",
+     "low": 2.8,
+     "high": 3.1,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "We still feel that we should be able to have a margin of somewhere between 2.8% to 3.1%, 3.2% in our mobile phone business.",
+     "speaker": "Atul Lall",
+     "call": "Feb 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/ad6e72f1-b5f8-4a75-8e45-f2e88c7525e0.pdf",
+     "score": 2,
+     "target": "2.8\u20133.1%",
+     "change": null
+    },
+    {
+     "metric": "margin",
+     "low": 10.0,
+     "high": null,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "We feel that it should be double-digit margin.",
+     "speaker": "Atul Lall",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/38b72f07-55a6-4503-91fd-ed3b2c209e96.pdf",
+     "score": 2,
+     "target": "\u226510%",
+     "change": "raised"
+    },
+    {
+     "metric": "margin",
+     "low": 2.3,
+     "high": 2.3,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "The margins would be closer to 2 -2.2 2.3% kind of numbers in IT hardware, which we feel that as we backwardly integrated more and more components, so as we backward integrate display, we plan to do SSDs, we plan to do Dixon Technologies (India) Limited October 30, 2026 Page 18 of 23 mechanicals there, and at some point of time we'll also look at power supplies.",
+     "speaker": "Saurabh Gupta",
+     "call": "Nov 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/995a3a71-4a1e-4c1f-a29a-6c6747e4ca10.pdf",
+     "score": 1,
+     "target": "2.3%",
+     "change": "cut"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "No period stated."
+  },
+  {
+   "metric": "capex",
+   "label": "Capex",
+   "period": null,
+   "basis": "inr",
+   "target": "1000 amount",
+   "trail": [
+    {
+     "metric": "capex",
+     "low": 1100.0,
+     "high": 1100.0,
+     "unit": "\u20b9 crore",
+     "period": null,
+     "basis": "inr",
+     "quote": "We will be putting capex of closer to INR1,100 crores, INR1,200-odd crores.",
+     "speaker": "Saurabh Gupta",
+     "call": "Feb 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/ad6e72f1-b5f8-4a75-8e45-f2e88c7525e0.pdf",
+     "score": 1,
+     "target": "1100 \u20b9 crore",
+     "change": null
+    },
+    {
+     "metric": "capex",
+     "low": 1000.0,
+     "high": 1000.0,
+     "unit": "amount",
+     "period": null,
+     "basis": "inr",
+     "quote": "And as far as display is concerned, we will be putting up a CAPEX of almost closer to INR 1,000 odd crores.",
+     "speaker": "Saurabh Gupta",
+     "call": "Nov 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/995a3a71-4a1e-4c1f-a29a-6c6747e4ca10.pdf",
+     "score": 1,
+     "target": "1000 amount",
+     "change": "cut"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Capex isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY28",
+   "basis": "inr",
+   "target": "\u226510%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": null,
+     "unit": "%",
+     "period": "FY28",
+     "basis": "inr",
+     "quote": "Mobile lines will be installed by Q4. So as guided earlier also, we feel that these are high double-digit teen margin businesses for us which, of course, we expect the same to start generating those kind of numbers in next financial year.",
+     "speaker": "Saurabh Gupta",
+     "call": "Nov 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/995a3a71-4a1e-4c1f-a29a-6c6747e4ca10.pdf",
+     "score": 4,
+     "target": "\u226510%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "2.5\u20135%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 12.0,
+     "high": 15.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Over the past few weeks, supply -demand dynamics are becoming more balanced, and we are beginning to see an improvement in customer ordering pattern, and we expect a high -double- digit growth quarter-on-quarter in the smartphones volume along with growth in selling prices by 12% to 15%.",
+     "speaker": "Atul Lall",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/38b72f07-55a6-4503-91fd-ed3b2c209e96.pdf",
+     "score": 1,
+     "target": "12\u201315%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 2.5,
+     "high": 5.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "And in this, the PLI guidelines is still awaited, but what we understand is it's going to be varying between 2.5% to 5%.",
+     "speaker": "Atul Lall",
+     "call": "Aug 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7ce2ca16-3043-48f4-97f9-a62a6a086c2f.pdf",
+     "score": 3,
+     "target": "2.5\u20135%",
+     "change": "cut"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 5,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 12836.0,
+   "yoy": 95.07598784194529,
+   "opm": 3.755063882829542,
+   "pat": 280.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 14855.0,
+   "yoy": 28.793133344893352,
+   "opm": 3.776506226859643,
+   "pat": 746.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 10672.0,
+   "yoy": 2.085326190931691,
+   "opm": 3.8793103448275863,
+   "pat": 321.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 10511.0,
+   "yoy": 2.1179442339454013,
+   "opm": 3.881647797545429,
+   "pat": 298.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 15548.0,
+   "yoy": 21.128077282642565,
+   "opm": 2.977874967841523,
+   "pat": 718.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 21794.0,
+   "yoy": 46.711544934365534,
+   "opm": 2.7392860420299163,
+   "pat": 411.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

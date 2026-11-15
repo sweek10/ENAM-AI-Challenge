@@ -1,0 +1,211 @@
+{
+ "ticker": "BAJFINANCE",
+ "name": "Bajaj Finance Ltd",
+ "screener_url": "https://www.screener.in/company/BAJFINANCE/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Oct 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7873abcb-7f97-487d-a474-028b0a26feea.pdf"
+  },
+  {
+   "label": "Aug 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b101e24e-b807-4c74-9025-90009f4b47a5.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a448b6b0-edb5-4b99-a122-d602950310af.pdf"
+  },
+  {
+   "label": "Feb 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/6eb34dc2-bde9-4df5-8b93-aad3d461140e.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "margin",
+   "label": "Operating margin",
+   "period": null,
+   "basis": "inr",
+   "target": "7%",
+   "trail": [
+    {
+     "metric": "margin",
+     "low": 7.0,
+     "high": 7.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "We've been pruning back, as I said earlier, that we've taken a proactive call that CPL will drop from where it is today at 7% in terms of origination to half business in some business, zero where I have no margin will be zero is the decision management has made and we are going about it.",
+     "speaker": "Rajeev Jain",
+     "call": "Oct 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7873abcb-7f97-487d-a474-028b0a26feea.pdf",
+     "score": 1,
+     "target": "7%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "No period stated."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "20\u201325%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 4.4,
+     "high": 4.6,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "We continue to guide for 4.4% to 4.6%.",
+     "speaker": "Rajeev Jain",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a448b6b0-edb5-4b99-a122-d602950310af.pdf",
+     "score": 3,
+     "target": "4.4\u20134.6%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 20.0,
+     "high": 25.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "I think that's just medium term, we maintain a guidance of 20% to 25% on a year lower here and a year higher there.",
+     "speaker": "Rajeev Jain",
+     "call": "Oct 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7873abcb-7f97-487d-a474-028b0a26feea.pdf",
+     "score": 3,
+     "target": "20\u201325%",
+     "change": "raised"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY28",
+   "basis": "inr",
+   "target": "4.4\u20134.6%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 4.4,
+     "high": 4.6,
+     "unit": "%",
+     "period": "FY28",
+     "basis": "inr",
+     "quote": "And the guidance that we are giving for next year is 4.4% to 4.6%.",
+     "speaker": "Sandeep Jain",
+     "call": "May 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a448b6b0-edb5-4b99-a122-d602950310af.pdf",
+     "score": 4,
+     "target": "4.4\u20134.6%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY26",
+   "basis": "inr",
+   "target": "22\u201323%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 22.0,
+     "high": 23.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "In terms of outlook, in terms of operating efficiencies, just on that from an outlook standpoint, given that we are in -- the year is virtually coming to an end, overall, we've taken a view that the top line growth or AUM growth will gravitate between 22% and 23%, but more likely to be 22% on a full year basis.",
+     "speaker": "Rajeev Jain",
+     "call": "Feb 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/6eb34dc2-bde9-4df5-8b93-aad3d461140e.pdf",
+     "score": 2,
+     "target": "22\u201323%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 4,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 19524.0,
+   "yoy": 21.267080745341605,
+   "opm": null,
+   "pat": 4765.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 19990.0,
+   "yoy": 16.962143818383947,
+   "opm": null,
+   "pat": 4948.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 21013.0,
+   "yoy": 16.512337122262277,
+   "opm": null,
+   "pat": 4066.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 21606.0,
+   "yoy": 18.104296490652683,
+   "opm": null,
+   "pat": 5553.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 23165.0,
+   "yoy": 18.64884245031755,
+   "opm": null,
+   "pat": 6081.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 24546.0,
+   "yoy": 22.791395697848916,
+   "opm": null,
+   "pat": 6367.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

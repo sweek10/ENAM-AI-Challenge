@@ -1,0 +1,75 @@
+{
+ "ticker": "TATASTEEL",
+ "name": "Tata Steel Ltd",
+ "screener_url": "https://www.screener.in/company/TATASTEEL/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Nov 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/eeedbcb3-2b63-4718-b5b7-b498eedf2b4e.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/6d6e2d40-e300-4aae-94bc-b1dc1136656c.pdf"
+  },
+  {
+   "label": "Feb 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7e178a2e-ea18-4b55-8e55-56e03dc5bea5.pdf"
+  },
+  {
+   "label": "Nov 2025",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/816939c9-f6c8-404b-afce-29aee1c980ed.pdf"
+  }
+ ],
+ "groups": [],
+ "judged": 0,
+ "unclear": 0,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 53178.0,
+   "yoy": -2.9084734622336628,
+   "opm": 13.968182331039152,
+   "pat": 2007.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 58689.0,
+   "yoy": 8.874872460810689,
+   "opm": 15.159569936444651,
+   "pat": 3183.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 57002.0,
+   "yoy": 6.251864002385932,
+   "opm": 14.385460159292657,
+   "pat": 2730.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 63270.0,
+   "yoy": 12.544025045359142,
+   "opm": 15.535008692903428,
+   "pat": 2965.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 60794.0,
+   "yoy": 14.32171198615968,
+   "opm": 15.238345889396978,
+   "pat": 2385.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 65436.0,
+   "yoy": 11.496191790625154,
+   "opm": 16.096644049147258,
+   "pat": 3700.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

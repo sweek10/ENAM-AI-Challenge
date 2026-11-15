@@ -1,0 +1,110 @@
+{
+ "ticker": "MARUTI",
+ "name": "Maruti Suzuki India Ltd",
+ "screener_url": "https://www.screener.in/company/MARUTI/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Oct 2026",
+   "url": "https://www.marutisuzuki.com/pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcompany-reports%2F2026-2027%2FTranscript_earnings_call_Maruti_Suzuki_Q2_FY_27.pdf"
+  },
+  {
+   "label": "Jul 2026",
+   "url": "https://www.marutisuzuki.com/pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcompany-reports%2F2026-2027%2FTranscript_earnings_call_Maruti_Suzuki_Q1_FY_27.pdf"
+  },
+  {
+   "label": "Apr 2026",
+   "url": "https://az-ci-afde-prd-arena-03-efddeyfchzf9akbb.z01.azurefd.net/msilintiwebpdfcopyfromdefault/Transcript_earnings_call_Maruti_Suzuki_Q4_FY_26.pdf"
+  },
+  {
+   "label": "Jan 2026",
+   "url": "https://marutistoragenew.blob.core.windows.net/msilintiwebpdf/Transcript_earnings_call_Maruti_Suzuki_Q3_FY_26.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY27",
+   "basis": "inr",
+   "target": "10%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 10.0,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "The broad expectation , which our Chairman also conveyed, is growth of over 10% this year as compared to the last year.",
+     "speaker": "Rahul Bharti",
+     "call": "Apr 2026",
+     "source": "https://az-ci-afde-prd-arena-03-efddeyfchzf9akbb.z01.azurefd.net/msilintiwebpdfcopyfromdefault/Transcript_earnings_call_Maruti_Suzuki_Q4_FY_26.pdf",
+     "score": 1,
+     "target": "10%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 1,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 38605.0,
+   "yoy": 7.898487939852994,
+   "opm": 11.975132754824505,
+   "pat": 3792.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 42344.0,
+   "yoy": 13.071110042991796,
+   "opm": 12.011146797657284,
+   "pat": 3349.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 49904.0,
+   "yoy": 28.738004333918067,
+   "opm": 11.1674414876563,
+   "pat": 3879.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 52462.0,
+   "yoy": 28.20625610948191,
+   "opm": 11.73801990011818,
+   "pat": 3659.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 52470.0,
+   "yoy": 35.915036912317056,
+   "opm": 8.219935201067278,
+   "pat": 3447.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 53356.0,
+   "yoy": 26.006045720763282,
+   "opm": 8.928705300247394,
+   "pat": 2466.0
+  }
+ ],
+ "problems": [
+  "Oct 2026: HTTPSConnectionPool(host='www.marutisuzuki.com', port=443): Max retries exceeded with url: /pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcomp",
+  "Jul 2026: HTTPSConnectionPool(host='www.marutisuzuki.com', port=443): Max retries exceeded with url: /pdf-viewer?pdf=%2Fcontent%2Fdam%2Farena-eds%2Fcorporate%2Fpdf%2Fcomp",
+  "Jan 2026: HTTPSConnectionPool(host='marutistoragenew.blob.core.windows.net', port=443): Max retries exceeded with url: /msilintiwebpdf/Transcript_earnings_call_Maruti_Suz"
+ ],
+ "stale": null,
+ "no_transcripts": false
+}

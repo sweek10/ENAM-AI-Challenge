@@ -1,0 +1,75 @@
+{
+ "ticker": "RELIANCE",
+ "name": "Reliance Industries Ltd",
+ "screener_url": "https://www.screener.in/company/RELIANCE/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Nov 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/8e997741-4d35-4188-933a-cf020fb9c816.pdf"
+  },
+  {
+   "label": "Jul 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/c9d3d96a-8b04-4b41-b454-3f98d1f90702.pdf"
+  },
+  {
+   "label": "Apr 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/971d8c86-397a-4780-b843-5a84d3006d0b.pdf"
+  },
+  {
+   "label": "Jan 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/26290395-526a-441f-a347-c8ac12e4adf3.pdf"
+  }
+ ],
+ "groups": [],
+ "judged": 0,
+ "unclear": 0,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 243632.0,
+   "yoy": 5.111655679425664,
+   "opm": 17.61057660734222,
+   "pat": 30783.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 254623.0,
+   "yoy": 9.971710540523038,
+   "opm": 18.020760104153986,
+   "pat": 22092.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 264905.0,
+   "yoy": 10.383522372138376,
+   "opm": 17.371510541514883,
+   "pat": 22290.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 294059.0,
+   "yoy": 12.499043567417022,
+   "opm": 15.010933180076108,
+   "pat": 20589.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 309468.0,
+   "yoy": 27.022722795035126,
+   "opm": 15.354414672922564,
+   "pat": 23196.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 330601.0,
+   "yoy": 29.83940963699272,
+   "opm": 17.125175059966548,
+   "pat": 29550.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

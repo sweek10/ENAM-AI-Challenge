@@ -1,0 +1,75 @@
+{
+ "ticker": "SUNPHARMA",
+ "name": "Sun Pharmaceutical Industries Ltd",
+ "screener_url": "https://www.screener.in/company/SUNPHARMA/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Nov 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/fe431adc-0e1a-48ee-9c2b-b6e39cba04e4.pdf"
+  },
+  {
+   "label": "Aug 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/34be7c92-1d9f-4010-ba30-2344c959bc5e.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/287022b2-8de5-487d-8d0d-77b819ee3eb4.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/293c1789-7308-4864-982a-192b016de087.pdf"
+  }
+ ],
+ "groups": [],
+ "judged": 0,
+ "unclear": 0,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 13851.0,
+   "yoy": 9.468110329566116,
+   "opm": 31.059129304743337,
+   "pat": 2293.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 14478.0,
+   "yoy": 8.93085546610488,
+   "opm": 31.268130957314543,
+   "pat": 3125.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 15521.0,
+   "yoy": 13.499085923217557,
+   "opm": 31.87938921461246,
+   "pat": 3381.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 14612.0,
+   "yoy": 12.755613859094073,
+   "opm": 27.059950725431154,
+   "pat": 2710.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 15300.0,
+   "yoy": 10.461338531513963,
+   "opm": 28.875816993464053,
+   "pat": 2901.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 16199.0,
+   "yoy": 11.887000966984385,
+   "opm": 29.28575838014692,
+   "pat": 1995.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

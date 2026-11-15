@@ -1,0 +1,511 @@
+{
+ "ticker": "LT",
+ "name": "Larsen & Toubro Ltd",
+ "screener_url": "https://www.screener.in/company/LT/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Jul 2026",
+   "url": "https://investors.larsentoubro.com/upload/Analysttrans/FY2027AnalysttransL&T-Earnings-Jul28-2026.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q4%20FY26%20Earnings%20Call%20Transcript.pdf"
+  },
+  {
+   "label": "Jan 2026",
+   "url": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Transcript%20Q3FY26.pdf"
+  },
+  {
+   "label": "Oct 2025",
+   "url": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q2FY26%20Earnings%20Call%20Transcript%20.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "revenue_growth",
+   "label": "Revenue growth",
+   "period": "FY26",
+   "basis": "inr",
+   "target": "15%",
+   "trail": [
+    {
+     "metric": "revenue_growth",
+     "low": 15.0,
+     "high": 15.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "Accordingly, we maintain our full year revenue growth guidance at 15%.",
+     "speaker": "Sensitivity",
+     "call": "Oct 2025",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q2FY26%20Earnings%20Call%20Transcript%20.pdf",
+     "score": 4,
+     "target": "15%",
+     "change": null
+    },
+    {
+     "metric": "revenue_growth",
+     "low": 15.0,
+     "high": 15.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "We expect the customary ramp -up in project execution during Q4 and are reasonably confident of achieving our full year revenue growth guidance of 15%.",
+     "speaker": "Sensitivity",
+     "call": "Jan 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Transcript%20Q3FY26.pdf",
+     "score": 4,
+     "target": "15%",
+     "change": "kept"
+    }
+   ],
+   "actual": 11.78563747629382,
+   "how": "sales, Jun 2025, Sep 2025, Dec 2025, Mar 2026 vs a year earlier",
+   "quarters": 4,
+   "of": 4,
+   "verdict": "missed",
+   "note": ""
+  },
+  {
+   "metric": "revenue_growth",
+   "label": "Revenue growth",
+   "period": "FY27",
+   "basis": "inr",
+   "target": "10\u201312%",
+   "trail": [
+    {
+     "metric": "revenue_growth",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "On Revenue, we expect growth to be in the range of 10% to 12% for FY27.",
+     "speaker": "P. Ramakrishnan",
+     "call": "May 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q4%20FY26%20Earnings%20Call%20Transcript.pdf",
+     "score": 3,
+     "target": "10\u201312%",
+     "change": null
+    },
+    {
+     "metric": "revenue_growth",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "For now, we remain committed to our FY '27 growth guidance of 10 % to 12% revenue growth guidance.",
+     "speaker": "On order flows",
+     "call": "Jul 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2027AnalysttransL&T-Earnings-Jul28-2026.pdf",
+     "score": 5,
+     "target": "10\u201312%",
+     "change": "kept"
+    }
+   ],
+   "actual": 11.41474825881228,
+   "how": "sales, Jun 2026, Sep 2026 vs a year earlier",
+   "quarters": 2,
+   "of": 4,
+   "verdict": "on track",
+   "note": ""
+  },
+  {
+   "metric": "margin",
+   "label": "Operating margin",
+   "period": "FY26",
+   "basis": "inr",
+   "target": "8.5%",
+   "trail": [
+    {
+     "metric": "margin",
+     "low": 8.5,
+     "high": 8.5,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "With the execution momentum expected to pick up in H2, we are reasonably confident to achieve our full year EBITDA margin target of 8.5%.",
+     "speaker": "Sensitivity",
+     "call": "Oct 2025",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q2FY26%20Earnings%20Call%20Transcript%20.pdf",
+     "score": 2,
+     "target": "8.5%",
+     "change": null
+    },
+    {
+     "metric": "margin",
+     "low": 8.5,
+     "high": 8.5,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "So Sumit, just to add, I did emphasize that the margin guidance of 8.5% remains the effort for taking into account that we have had a good 9 months despite the fact of Hydrocarbon margins having moved southwards this year.",
+     "speaker": "P. Ramakrishnan",
+     "call": "Jan 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Transcript%20Q3FY26.pdf",
+     "score": 4,
+     "target": "8.5%",
+     "change": "kept"
+    }
+   ],
+   "actual": 12.643987756886752,
+   "how": "operating profit \u00f7 sales, Jun 2025, Sep 2025, Dec 2025, Mar 2026",
+   "quarters": 4,
+   "of": 4,
+   "verdict": "unclear",
+   "note": "Guided margin is more than 3 points from the reported operating margin, so it's probably a segment or a different measure."
+  },
+  {
+   "metric": "margin",
+   "label": "Operating margin",
+   "period": null,
+   "basis": "inr",
+   "target": "8.5%",
+   "trail": [
+    {
+     "metric": "margin",
+     "low": 8.5,
+     "high": 8.5,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "The current southward movement in Energy margins is baked, I reiterate , is baked when we have given the guidance of 8.5%.",
+     "speaker": "P. Ramakrishnan",
+     "call": "Oct 2025",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q2FY26%20Earnings%20Call%20Transcript%20.pdf",
+     "score": 3,
+     "target": "8.5%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "No period stated."
+  },
+  {
+   "metric": "capex",
+   "label": "Capex",
+   "period": "FY27",
+   "basis": "inr",
+   "target": "6.9%",
+   "trail": [
+    {
+     "metric": "capex",
+     "low": 6.9,
+     "high": 6.9,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "The economic growth in India for FY '27 is expected to be around 6.9%, supported by resilient household demand, sustained public capital expenditure, and continued strength in the services sector.",
+     "speaker": "P. Ramakrishnan",
+     "call": "May 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q4%20FY26%20Earnings%20Call%20Transcript.pdf",
+     "score": 2,
+     "target": "6.9%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Capex isn't in the quarterly results."
+  },
+  {
+   "metric": "capex",
+   "label": "Capex",
+   "period": "FY26",
+   "basis": "inr",
+   "target": "30%",
+   "trail": [
+    {
+     "metric": "capex",
+     "low": 6.5,
+     "high": 7.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "The domestic conditions are favourable with GDP growth for FY '26 projected between 6.5% to 7%, largely driven by retail consumption resilient services sector and steady capex.",
+     "speaker": "P. Ramakrishnan",
+     "call": "Oct 2025",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q2FY26%20Earnings%20Call%20Transcript%20.pdf",
+     "score": 3,
+     "target": "6.5\u20137%",
+     "change": null
+    },
+    {
+     "metric": "capex",
+     "low": 30.0,
+     "high": 30.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "Before we conclude, let me cover the guidance on the various parameters for FY '26: On order inflows - Our nine months order inflow has seen a strong growth of 30% Y-on-Y based on a strong capex momentum.",
+     "speaker": "Sensitivity",
+     "call": "Jan 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Transcript%20Q3FY26.pdf",
+     "score": 4,
+     "target": "30%",
+     "change": "raised"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Capex isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY27",
+   "basis": "inr",
+   "target": "10\u201312%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "Yes, so as I sai d, we have given the revenue guidance of 10% to 12% for FY27, basis the fact that the first six months will be subdued, given the fact of the situation that is happening in the Larsen & Toubro Limited May 05, 2026 Page 14 of 28 Middle East.",
+     "speaker": "P. Ramakrishnan",
+     "call": "May 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q4%20FY26%20Earnings%20Call%20Transcript.pdf",
+     "score": 4,
+     "target": "10\u201312%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": "FY27",
+     "basis": "inr",
+     "quote": "Given the strength of our opportunity pipeline and the underlying market dynamics, we remain confident of achieving our order inflow growth guidance of 10% to 12% band for the current year.",
+     "speaker": "On order flows",
+     "call": "Jul 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2027AnalysttransL&T-Earnings-Jul28-2026.pdf",
+     "score": 4,
+     "target": "10\u201312%",
+     "change": "kept"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "10\u201312%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 12.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Lastly, on Working Capital - We had earlier guided the Net Working Capital to Revenue of 12% by March '26.",
+     "speaker": "Sensitivity",
+     "call": "Jan 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Transcript%20Q3FY26.pdf",
+     "score": 2,
+     "target": "12%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Concluding with the Lakshya guidance, over the next five years, we are targeting order inflow growth at a CAGR return of 10% to 12%, revenue growth of 12% to 15%, and a Return on Equity in the range of 16% to 17%.",
+     "speaker": "P. Ramakrishnan",
+     "call": "May 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q4%20FY26%20Earnings%20Call%20Transcript.pdf",
+     "score": 3,
+     "target": "10\u201312%",
+     "change": "cut"
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 12.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "And basis the conversion rate, it is fair for us to assume that we are on track to possibly do 10% to 12% order inflow guidance to meet.",
+     "speaker": "P. Ramakrishnan",
+     "call": "Jul 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2027AnalysttransL&T-Earnings-Jul28-2026.pdf",
+     "score": 3,
+     "target": "10\u201312%",
+     "change": "kept"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY26",
+   "basis": "inr",
+   "target": "10%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 10.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "We are confident of ex ceeding our full year FY '26 guidance of 10% growth in group order inflows for the current year.",
+     "speaker": "Sensitivity",
+     "call": "Oct 2025",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q2FY26%20Earnings%20Call%20Transcript%20.pdf",
+     "score": 3,
+     "target": "10%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 10.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "Basis the 9-month performance and the healthy prospects pipeline for the near term, we will be exceeding the 10% order inflow guidance for FY '26.",
+     "speaker": "Sensitivity",
+     "call": "Jan 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Transcript%20Q3FY26.pdf",
+     "score": 3,
+     "target": "10%",
+     "change": "kept"
+    },
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 10.0,
+     "unit": "%",
+     "period": "FY26",
+     "basis": "inr",
+     "quote": "On order inflows, we had guided for a growth of 10% for FY26 at the start of the year.",
+     "speaker": "P. Ramakrishnan",
+     "call": "May 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Q4%20FY26%20Earnings%20Call%20Transcript.pdf",
+     "score": 3,
+     "target": "10%",
+     "change": "kept"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "Q4FY26",
+   "basis": "inr",
+   "target": "2.9%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 2.9,
+     "high": 2.9,
+     "unit": "%",
+     "period": "Q4FY26",
+     "basis": "inr",
+     "quote": "The RBI now anticipates CPI inflation at 2.9% for Q4 FY '26.",
+     "speaker": "P. Ramakrishnan",
+     "call": "Jan 2026",
+     "source": "https://investors.larsentoubro.com/upload/Analysttrans/FY2026AnalysttransL&T%20Transcript%20Q3FY26.pdf",
+     "score": 1,
+     "target": "2.9%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 2,
+ "unclear": 8,
+ "headline": "Promised 15% revenue growth for FY26. it's at 11.8%. Missed.",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 63679.0,
+   "yoy": 15.527939042089978,
+   "opm": 12.600700387882977,
+   "pat": 4318.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 67984.0,
+   "yoy": 10.444318089513448,
+   "opm": 12.522064015062368,
+   "pat": 4678.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 71450.0,
+   "yoy": 10.487412630667414,
+   "opm": 12.862141357592721,
+   "pat": 3825.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 82762.0,
+   "yoy": 11.251209807506179,
+   "opm": 12.589110944636428,
+   "pat": 6133.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 67942.0,
+   "yoy": 6.69451467516764,
+   "opm": 11.994053751729417,
+   "pat": 4988.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 78750.0,
+   "yoy": 15.836079077429988,
+   "opm": 11.192380952380953,
+   "pat": 5949.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

@@ -1,0 +1,211 @@
+{
+ "ticker": "PERSISTENT",
+ "name": "Persistent Systems Ltd",
+ "screener_url": "https://www.screener.in/company/PERSISTENT/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Oct 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/524eadda-3966-4f4f-8888-bfaf2cb0d69e.pdf"
+  },
+  {
+   "label": "Aug 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b1c49752-0908-4750-9177-398a60654630.pdf"
+  },
+  {
+   "label": "Apr 2026",
+   "url": "https://www.persistent.com/wp-content/uploads/2026/04/Analyst-Call-Transcript-Q4FY26.pdf"
+  },
+  {
+   "label": "Jan 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b68ef2b0-b285-4696-8c08-e3bb58039b0e.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "margin",
+   "label": "Operating margin",
+   "period": null,
+   "basis": "inr",
+   "target": "16\u201317%",
+   "trail": [
+    {
+     "metric": "margin",
+     "low": 16.0,
+     "high": 17.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Persistent Systems Limited Page 21 of 25 So, we are reasonably assured in our minds about what we are signed up for, our ability to optimize margins over a period of time and deliver to our aspirational goals of 16 to 17% margins and the growth that we aspire.",
+     "speaker": "Sandeep Kalra",
+     "call": "Oct 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/524eadda-3966-4f4f-8888-bfaf2cb0d69e.pdf",
+     "score": 2,
+     "target": "16\u201317%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "No period stated."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "16\u201317%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 22.0,
+     "high": 22.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "It then helped us arrive at the modern technology-based solution along with the overall transformation plan while preserving mission critical continuity and targeting around 22% productivity as well as time-to-market improvement.",
+     "speaker": "Jaideep Dhok",
+     "call": "Jan 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b68ef2b0-b285-4696-8c08-e3bb58039b0e.pdf",
+     "score": 0,
+     "target": "22%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 16.0,
+     "high": 17.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Our aspiration continues to be in the 16 to 17% range.",
+     "speaker": "Vinit Teredesai",
+     "call": "Apr 2026",
+     "source": "https://www.persistent.com/wp-content/uploads/2026/04/Analyst-Call-Transcript-Q4FY26.pdf",
+     "score": 1,
+     "target": "16\u201317%",
+     "change": "cut"
+    },
+    {
+     "metric": "other",
+     "low": 70.0,
+     "high": 70.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "And Persistent Systems Limited, which is the parent entity, will provide a corporate guarantee of \u20ac1.4 billion and it will also include any outstanding accrued interest in addition to the bridge facility of \u20ac1.4 billion. \u2022 Goodwill and Other Intangibles put together, so we are anticipating it will be roughly around 70% Goodwill and 30% Other Intangibles.",
+     "speaker": "Vinit Teredesai",
+     "call": "Aug 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b1c49752-0908-4750-9177-398a60654630.pdf",
+     "score": 0,
+     "target": "70%",
+     "change": "raised"
+    },
+    {
+     "metric": "other",
+     "low": 16.0,
+     "high": 17.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Yeah, so from our perspective we have said we want to be in the 16 to 17 % range, that is our aspiration.",
+     "speaker": "Sandeep Kalra",
+     "call": "Oct 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/524eadda-3966-4f4f-8888-bfaf2cb0d69e.pdf",
+     "score": 1,
+     "target": "16\u201317%",
+     "change": "cut"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "FY30",
+   "basis": "inr",
+   "target": "50%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 50.0,
+     "high": 50.0,
+     "unit": "%",
+     "period": "FY30",
+     "basis": "inr",
+     "quote": "So, at 50% plus 1 share to 100%, it is expected to reduce down to 1X by FY2030. \u2022 The total amount of facility, committed bridge financing facility, of \u20ac1.4 billion includes the refinancing of Nagarro's existing debt, if required.",
+     "speaker": "Vinit Teredesai",
+     "call": "Aug 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/b1c49752-0908-4750-9177-398a60654630.pdf",
+     "score": 1,
+     "target": "50%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 3,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 3334.0,
+   "yoy": 21.812203142126418,
+   "opm": 18.35632873425315,
+   "pat": 425.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 3581.0,
+   "yoy": 23.610631687953052,
+   "opm": 19.072884669086847,
+   "pat": 471.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 3778.0,
+   "yoy": 23.38340953625082,
+   "opm": 19.401799894123876,
+   "pat": 439.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 4056.0,
+   "yoy": 25.107958050586056,
+   "opm": 18.93491124260355,
+   "pat": 529.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 4303.0,
+   "yoy": 29.06418716256749,
+   "opm": 16.198001394376014,
+   "pat": 483.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 4664.0,
+   "yoy": 30.242948896956158,
+   "opm": 13.572041166380789,
+   "pat": 352.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

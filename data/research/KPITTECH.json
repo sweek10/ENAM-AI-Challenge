@@ -1,0 +1,121 @@
+{
+ "ticker": "KPITTECH",
+ "name": "KPIT Technologies Ltd",
+ "screener_url": "https://www.screener.in/company/KPITTECH/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Nov 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a7331811-fe14-4c79-896d-f0a9df901335.pdf"
+  },
+  {
+   "label": "Aug 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/d07f9c52-5c5a-443b-b239-6acd5e94b97a.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/70c85b6c-58e6-423f-9b32-50b17a948674.pdf"
+  },
+  {
+   "label": "Feb 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a574a9b4-2ec3-4418-afd7-7deb13264328.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "89%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 50.0,
+     "high": 60.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "And, we are expecting, I mean, I don\u2019t know what over the period will happen, but at least 50%-60% kind of reusability benefit is in most of the solutions.",
+     "speaker": "Kishor Patil",
+     "call": "Feb 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a574a9b4-2ec3-4418-afd7-7deb13264328.pdf",
+     "score": 1,
+     "target": "50\u201360%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 89.0,
+     "high": 89.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "We have got reasonable wins and now 89% of the wins have come from target accounts.",
+     "speaker": "Kishor Patil",
+     "call": "Nov 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/a7331811-fe14-4c79-896d-f0a9df901335.pdf",
+     "score": 0,
+     "target": "89%",
+     "change": "raised"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 1,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 1539.0,
+   "yoy": 12.747252747252746,
+   "opm": 19.16829109811566,
+   "pat": 172.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 1588.0,
+   "yoy": 7.953772943575799,
+   "opm": 18.765743073047858,
+   "pat": 169.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 1617.0,
+   "yoy": 9.404600811907994,
+   "opm": 19.233147804576376,
+   "pat": 133.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 1711.0,
+   "yoy": 11.97643979057592,
+   "opm": 18.52717708942139,
+   "pat": 163.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 1675.0,
+   "yoy": 8.836907082521117,
+   "opm": 15.343283582089553,
+   "pat": 116.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 1691.0,
+   "yoy": 6.486146095717893,
+   "opm": 15.789473684210526,
+   "pat": 121.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}

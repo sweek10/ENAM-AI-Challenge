@@ -1,0 +1,153 @@
+{
+ "ticker": "TCS",
+ "name": "Tata Consultancy Services Ltd",
+ "screener_url": "https://www.screener.in/company/TCS/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Oct 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7dc14216-f892-46f1-bf82-5c7b387a83b9.pdf"
+  },
+  {
+   "label": "Jul 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/27523cab-de62-4f78-939a-6d9853bbd060.pdf"
+  },
+  {
+   "label": "Jul 2026",
+   "url": "https://www.tcs.com/content/dam/tcs/investor-relations/financial-statements/2025-26/q1/Management%20Commentary/Transcript%20of%20the%20Q1%202025-26%20Earnings%20Conference%20Call%20held%20at%201900%20hrs%20IST%20on%20Jul%2010,%202025.pdf"
+  },
+  {
+   "label": "Apr 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/07ae2d32-1050-4e80-96ff-eb2d98378d4e.pdf"
+  }
+ ],
+ "groups": [
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": null,
+   "basis": "inr",
+   "target": "25\u201330%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 10.0,
+     "high": 15.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "By and large, as I said, it's a rule of thumb, saying we can expect a 10% to 15% productivity on average .",
+     "speaker": "K Krithivasan",
+     "call": "Jul 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/27523cab-de62-4f78-939a-6d9853bbd060.pdf",
+     "score": 1,
+     "target": "10\u201315%",
+     "change": null
+    },
+    {
+     "metric": "other",
+     "low": 25.0,
+     "high": 30.0,
+     "unit": "%",
+     "period": null,
+     "basis": "inr",
+     "quote": "Our approach, supported by TCS\u2019 agentic platform, targets 25% to 30% faster implementation.",
+     "speaker": "Our priority is clear",
+     "call": "Oct 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/7dc14216-f892-46f1-bf82-5c7b387a83b9.pdf",
+     "score": 1,
+     "target": "25\u201330%",
+     "change": "raised"
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  },
+  {
+   "metric": "other",
+   "label": "Other",
+   "period": "Q1FY27",
+   "basis": "inr",
+   "target": "50%",
+   "trail": [
+    {
+     "metric": "other",
+     "low": 50.0,
+     "high": 50.0,
+     "unit": "%",
+     "period": "Q1FY27",
+     "basis": "inr",
+     "quote": "In Q1 FY27, associates logged 14.6 million learning hours and gained over 1.3 million competencies. \uf0b7 Our lateral hiring is focused on domain-speci\ufb01c and AI-native talent. o Over 50% of the lateral hires already possess next-generation skills and we expect this share to increase as we continue to build talent depth.",
+     "speaker": "Sudeep Kunnumal",
+     "call": "Jul 2026",
+     "source": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/27523cab-de62-4f78-939a-6d9853bbd060.pdf",
+     "score": 1,
+     "target": "50%",
+     "change": null
+    }
+   ],
+   "actual": null,
+   "how": "",
+   "quarters": 0,
+   "of": 0,
+   "verdict": "unclear",
+   "note": "Other isn't in the quarterly results."
+  }
+ ],
+ "judged": 0,
+ "unclear": 2,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 63437.0,
+   "yoy": 1.3160206346924719,
+   "opm": 26.601194886265112,
+   "pat": 12819.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 65799.0,
+   "yoy": 2.3965514558272005,
+   "opm": 27.322603686986124,
+   "pat": 12131.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 67087.0,
+   "yoy": 4.867678551889076,
+   "opm": 27.2318034790645,
+   "pat": 10720.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 70698.0,
+   "yoy": 9.64500069790164,
+   "opm": 27.265269173102492,
+   "pat": 13784.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 72275.0,
+   "yoy": 13.93193246843325,
+   "opm": 25.674161189899692,
+   "pat": 13420.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 73188.0,
+   "yoy": 11.229653946108598,
+   "opm": 25.70776630048642,
+   "pat": 13934.0
+  }
+ ],
+ "problems": [
+  "Jul 2026: HTTPSConnectionPool(host='www.tcs.com', port=443): Max retries exceeded with url: /content/dam/tcs/investor-relations/financial-statements/2025-26/q1/Management"
+ ],
+ "stale": null,
+ "no_transcripts": false
+}

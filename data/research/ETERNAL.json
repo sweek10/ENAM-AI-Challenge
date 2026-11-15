@@ -1,0 +1,75 @@
+{
+ "ticker": "ETERNAL",
+ "name": "Eternal Ltd",
+ "screener_url": "https://www.screener.in/company/ETERNAL/consolidated/",
+ "built_at": "2026-11-15T19:31+05:30",
+ "calls": [
+  {
+   "label": "Oct 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/64f36e3b-87e9-426e-be3e-515dca4525d2.pdf"
+  },
+  {
+   "label": "Jul 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/faa4f0f7-06e4-4066-9d68-3da95dfe02d9.pdf"
+  },
+  {
+   "label": "May 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/60af607c-5f1b-4d5d-8425-4929efa6aad1.pdf"
+  },
+  {
+   "label": "Jan 2026",
+   "url": "https://www.bseindia.com/xml-data/corpfiling/AttachHis/91f3f29f-c5c0-49b5-b425-a22374bf08ad.pdf"
+  }
+ ],
+ "groups": [],
+ "judged": 0,
+ "unclear": 0,
+ "headline": "",
+ "quarters": [
+  {
+   "q": "Jun 2025",
+   "sales": 7167.0,
+   "yoy": 70.39942938659058,
+   "opm": 1.6045765313241245,
+   "pat": 25.0
+  },
+  {
+   "q": "Sep 2025",
+   "sales": 13590.0,
+   "yoy": 183.18399666597207,
+   "opm": 1.7586460632818248,
+   "pat": 65.0
+  },
+  {
+   "q": "Dec 2025",
+   "sales": 16315.0,
+   "yoy": 201.85013876040702,
+   "opm": 2.2555930125651242,
+   "pat": 102.0
+  },
+  {
+   "q": "Mar 2026",
+   "sales": 17292.0,
+   "yoy": 196.45122578433055,
+   "opm": 2.810548230395559,
+   "pat": 174.0
+  },
+  {
+   "q": "Jun 2026",
+   "sales": 20211.0,
+   "yoy": 182.00083717036418,
+   "opm": 2.938993617337094,
+   "pat": 92.0
+  },
+  {
+   "q": "Sep 2026",
+   "sales": 24138.0,
+   "yoy": 77.6158940397351,
+   "opm": 3.115419670229514,
+   "pat": 125.0
+  }
+ ],
+ "problems": [],
+ "stale": null,
+ "no_transcripts": false
+}
