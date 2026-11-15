@@ -38,6 +38,8 @@ h2 a, h2 span{font-weight:400; font-size:13px; color:var(--slate)}
 .meta{display:flex; flex-wrap:wrap; gap:4px 12px; font-size:13px; color:var(--slate)}
 .tag{color:var(--ink); font-weight:600}
 .meta a{color:var(--slate)}
+.meta a.dig{flex-basis:100%; margin-top:6px; color:var(--ink); font-weight:650; text-decoration:none;
+  padding:9px 12px; border:1px solid var(--faint); border-radius:10px; text-align:center}
 .rel{margin-top:10px; font-size:13px}
 .rel summary{cursor:pointer; color:var(--slate); list-style:none}
 .rel summary::-webkit-details-marker{display:none}
@@ -92,6 +94,7 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
 {% set ref = d.end %}
 {% if d.demo %}<p class="demo">Demo data for layout only. Run <code>python -m scripts.refresh</code> to load real filings.</p>{% endif %}
 
+{% set q = '' %}{% include "search.html" %}
 <nav class="win" aria-label="Time window">
   {% for w in windows %}<a href="/?window={{ w }}" {% if w == d.window %}aria-current="true"{% endif %}>{{ w }}</a>{% endfor %}
 </nav>
@@ -178,6 +181,7 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
   <div class="meta">
     <span class="tag">{{ i.label }}</span><span>{{ ago(i.a.dt, ref) }}</span>{% if i.why %}<span>{{ i.why }}</span>{% endif %}
     {% if i.a.pdf_url %}<a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open filing</a>{% endif %}
+    <a class="dig" href="/research/{{ i.a.symbol }}">Dig deeper: promised vs delivered</a>
   </div>
   {% if i.related %}
   <details class="rel"><summary>{{ i.related|length }} more from {{ i.a.symbol }} that day</summary>
@@ -193,7 +197,7 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
 <div class="list">
   {% for i in d.notable %}
   <div class="li">
-    <span class="tk">{{ i.a.symbol }}</span>
+    <a class="tk" href="/research/{{ i.a.symbol }}" style="text-decoration:none" title="Research {{ i.a.symbol }}">{{ i.a.symbol }}</a>
     <span class="t">{% if i.a.pdf_url %}<a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener" style="text-decoration:none">{{ i.title }}</a>{% else %}{{ i.title }}{% endif %}</span>
     <span class="m">{{ i.label }}, {{ ago(i.a.dt, ref) }}{% if i.related %}, +{{ i.related|length }} related{% endif %}</span>
   </div>

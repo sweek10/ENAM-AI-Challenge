@@ -260,4 +260,5 @@ def test_enrich_end_to_end(tmp_path, tmp_data, monkeypatch):
     from fastapi.testclient import TestClient
     html = TestClient(webapp.app).get("/").text
     assert "73,188" in html and "page 1 of the filing" in html and "Ravi Iyer" in html
+    assert 'href="/research/TCS"' in html and "Dig deeper" in html and 'action="/research"' in html
     assert "by reading the filing&#39;s first page" in html or "by reading the filing's first page" in html
