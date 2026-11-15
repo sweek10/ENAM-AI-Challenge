@@ -28,13 +28,11 @@ h2 a, h2 span{font-weight:400; font-size:13px; color:var(--slate)}
 .al .chg.quiet{color:var(--slate); font-weight:500}
 .flat{color:var(--slate)}
 
-/* need-you: the only place the highlighter is used */
+/* need-you cards */
 .card{background:var(--sheet); border-radius:var(--r-sheet); padding:14px 14px 12px; margin-bottom:10px}
 .row1{display:flex; align-items:baseline; gap:8px}
 .row1 .move{margin-left:auto; font-size:13px; white-space:nowrap}
 .title{font-size:17px; font-weight:620; line-height:1.3; margin:6px 0 8px}
-.hl{background:linear-gradient(transparent 52%, var(--mark) 52%, var(--mark) 92%, transparent 92%);
-    box-decoration-break:clone; -webkit-box-decoration-break:clone; padding:0 2px}
 .meta{display:flex; flex-wrap:wrap; gap:4px 12px; font-size:13px; color:var(--slate)}
 .tag{color:var(--ink); font-weight:600}
 .meta a{color:var(--slate)}
@@ -136,11 +134,11 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
 {% for i in d.need_you %}
 <article class="card">
   <div class="row1"><span class="tk">{{ i.a.symbol }}</span>{% set nm = BY_SYMBOL[i.a.symbol].name if i.a.symbol in BY_SYMBOL else '' %}{% if nm|upper != i.a.symbol %}<span class="co">{{ nm }}</span>{% endif %}{{ move_chip(i.a.symbol) }}</div>
-  <p class="title"><span class="{{ 'hl' if i.first }}">{{ i.title }}</span></p>
+  <p class="title">{{ i.title }}</p>
   {% if i.p1_summary %}<p class="p1">{{ i.p1_summary }}</p>{% endif %}
   {% if i.results %}{% set rc = i.results %}
     {% if rc.status == 'not_found' %}
-    <p class="src">Headline numbers not found in this filing. <a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open the filing</a></p>
+    <p class="src">No results table we could read in this filing.</p>
     {% else %}
     <table class="rc" aria-label="Headline numbers">
       <thead><tr><th>{{ rc.unit or '' }}</th><th>{{ rc.periods.get('current') or 'This quarter' }}</th><th>QoQ</th><th>YoY</th></tr></thead>
@@ -175,7 +173,7 @@ footer{margin-top:36px; font-size:12.5px; color:var(--slate); line-height:1.5}
     </div>
     <p class="src">From the filing{% if p.page %}, <a href="{{ i.a.pdf_url }}#page={{ p.page }}" target="_blank" rel="noopener">page {{ p.page }}</a>{% endif %}{% if mc.people|length > 1 %}, plus {{ mc.people|length - 1 }} other change{{ 's' if mc.people|length > 2 }}{% endif %}. <a href="{{ linkedin_search(p.name, BY_SYMBOL[i.a.symbol].name if i.a.symbol in BY_SYMBOL else '') }}" target="_blank" rel="noopener">Find on LinkedIn</a></p>
     {% else %}
-    <p class="src">No named person found in the filing. <a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open the filing</a></p>
+    <p class="src">No named person found in the filing.</p>
     {% endif %}
   {% endif %}
   {% if i.card_error %}<p class="src">Couldn't read this filing ({{ i.card_error[:80] }}). <a href="{{ i.a.pdf_url }}" target="_blank" rel="noopener">Open the filing</a></p>{% endif %}
