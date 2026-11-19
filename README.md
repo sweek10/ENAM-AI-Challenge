@@ -9,7 +9,8 @@ Mobile-first web app for ENAM's AI Engineer build challenge. Two workflows, buil
   numeric guidance management gave, and hold it against the reported quarters: delivered, missed, on track,
   behind, too early, or *unclear* when the code can't judge honestly.
 
-**Live demo:** https://<your-url>/?window=30d · **Build history:** _add the conversation link_
+**Live demo:** [https://<your-url>/?window=30d](https://finn-vp0c.onrender.com/?window=30d) · 
+**Build history:** [_add the conversation link_](https://claude.ai/share/ee81121d-9f38-4703-bd62-d754085c21c1)
 
 ## The point of view
 
